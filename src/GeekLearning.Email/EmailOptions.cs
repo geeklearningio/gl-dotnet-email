@@ -9,5 +9,7 @@
         public Implementation.EmailAddress DefaultSender { get; set; }
 
         public string TemplateStorage { get; set; }
+
+        public string MockupRecipient { get; set; }
     }
 }

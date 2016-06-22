@@ -84,14 +84,14 @@
 
             if (recipients.Count() == 1)
             {
-                variables["to"] = recipients.First().Email;
+                variables["to"] = string.IsNullOrEmpty(this.options.MockupRecipient) ? recipients.First().Email : this.options.MockupRecipient;
                 variables["toname"] = recipients.First().DisplayName;
             }
             else
             {
                 foreach (var recipient in recipients)
                 {
-                    variables["to[]"] = recipient.Email;
+                    variables["to[]"] = string.IsNullOrEmpty(this.options.MockupRecipient) ? recipient.Email : this.options.MockupRecipient;
                     variables["toname[]"] = recipient.DisplayName;
                 }
             }
