@@ -108,7 +108,7 @@
 
         private Task<ITemplate> GetTemplateAsync(string templateKey, EmailTemplateType templateType)
         {
-            return this.templateLoader.GetTemplate($"{templateKey}-{templateType}.hbs");
+            return this.templateLoader.GetTemplate($"{templateKey}-{templateType}");
         }
     }
 }
