@@ -131,8 +131,8 @@
 
             if (finalRecipients.Count() == 1)
             {
-                variables.Add(new KeyValuePair<string, string>("to", recipients.First().Email));
-                variables.Add(new KeyValuePair<string, string>("toname", recipients.First().DisplayName));
+                variables.Add(new KeyValuePair<string, string>("to", finalRecipients.First().Email));
+                variables.Add(new KeyValuePair<string, string>("toname", finalRecipients.First().DisplayName));
             }
             else
             {
