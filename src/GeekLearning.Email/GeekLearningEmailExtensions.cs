@@ -7,7 +7,7 @@
     {
         public static IServiceCollection AddEmail(this IServiceCollection services)
         {
-            services.AddSingleton<IEmailSender, Implementation.EmailSender>();
+            services.AddSingleton<IEmailSender, Internal.EmailSender>();
 
             return services;
         }
