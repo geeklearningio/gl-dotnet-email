@@ -34,7 +34,7 @@ namespace GeekLearning.Email.Samples
 
             services.AddStorage().AddFileSystemStorage();
             services.Configure<StorageOptions>(Configuration.GetSection("Storage"));
-            services.AddTemplating().AddMustache();
+            services.AddTemplating().AddHandlebars();
 
             services.AddEmail();
             services.Configure<EmailOptions>(Configuration.GetSection("Email"));

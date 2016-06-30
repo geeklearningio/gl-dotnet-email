@@ -1,4 +1,4 @@
-﻿namespace GeekLearning.Email.Implementation
+﻿namespace GeekLearning.Email.Internal
 {
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
@@ -68,31 +68,78 @@
             string text,
             string html)
         {
-            var client = new HttpClient();
-            var message = new HttpRequestMessage(HttpMethod.Post, "https://api.sendgrid.com/api/mail.send.json");
-
-            var variables = new Dictionary<string, string>()
-            {
-                ["api_user"] = apiUser,
-                ["api_key"] = apiKey,
-                ["from"] = from.Email,
-                ["fromname"] = from.DisplayName,
-                ["subject"] = subject,
-                ["text"] = text,
-                ["html"] = html,
-            };
-
-            if (recipients.Count() == 1)
-            {
-                variables["to"] = string.IsNullOrEmpty(this.options.MockupRecipient) ? recipients.First().Email : this.options.MockupRecipient;
-                variables["toname"] = recipients.First().DisplayName;
-            }
-            else
+            var finalRecipients = new List<IEmailAddress>();
+            var mockedUpRecipients = new List<IEmailAddress>();
+            if (this.options.IsMockedUp)
             {
                 foreach (var recipient in recipients)
                 {
-                    variables["to[]"] = string.IsNullOrEmpty(this.options.MockupRecipient) ? recipient.Email : this.options.MockupRecipient;
-                    variables["toname[]"] = recipient.DisplayName;
+                    var emailParts = recipient.Email.Split('@');
+                    if (emailParts.Length != 2)
+                    {
+                        throw new NotSupportedException("Bad recipient email.");
+                    }
+
+                    var domain = emailParts[1];
+
+                    if (!this.options.Mockup.Exceptions.Emails.Contains(recipient.Email)
+                        && !this.options.Mockup.Exceptions.Domains.Contains(domain))
+                    {
+                        if (!mockedUpRecipients.Any())
+                        {
+                            foreach (var mockupRecipient in this.options.Mockup.Recipients)
+                            {
+                                finalRecipients.Add(new EmailAddress(mockupRecipient, "Mockup Recipient"));
+                            }
+                        }
+
+                        mockedUpRecipients.Add(recipient);
+                    }
+                    else
+                    {
+                        finalRecipients.Add(recipient);
+                    }
+                }
+            }
+            else
+            {
+                finalRecipients = recipients.ToList();
+            }
+
+            if (mockedUpRecipients.Any())
+            {
+                var disclaimer = this.options.Mockup.Disclaimer;
+                var joinedMockedUpRecipients = string.Join(", ", mockedUpRecipients.Select(r => $"{r.DisplayName} ({r.Email})"));
+
+                text = string.Concat(text, Environment.NewLine, disclaimer, Environment.NewLine, joinedMockedUpRecipients);
+                html = string.Concat(html, "<br/><i>", disclaimer, "<br/>", joinedMockedUpRecipients, "</i>");
+            }
+
+            var client = new HttpClient();
+            var message = new HttpRequestMessage(HttpMethod.Post, "https://api.sendgrid.com/api/mail.send.json");
+
+            var variables = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("api_user", apiUser),
+                new KeyValuePair<string, string>("api_key", apiKey),
+                new KeyValuePair<string, string>("from", from.Email),
+                new KeyValuePair<string, string>("fromname", from.DisplayName),
+                new KeyValuePair<string, string>("subject", subject),
+                new KeyValuePair<string, string>("text", text),
+                new KeyValuePair<string, string>("html", html),
+            };
+
+            if (finalRecipients.Count() == 1)
+            {
+                variables.Add(new KeyValuePair<string, string>("to", finalRecipients.First().Email));
+                variables.Add(new KeyValuePair<string, string>("toname", finalRecipients.First().DisplayName));
+            }
+            else
+            {
+                foreach (var recipient in finalRecipients)
+                {
+                    variables.Add(new KeyValuePair<string, string>("to[]", recipient.Email));
+                    variables.Add(new KeyValuePair<string, string>("toname[]", recipient.DisplayName));
                 }
             }
 

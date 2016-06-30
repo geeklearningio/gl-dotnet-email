@@ -20,8 +20,8 @@
     "Microsoft.Extensions.Logging.Debug": "1.0.0-rc2-final",
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-rc2-final",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-rc2-final",
-    "GeekLearning.Templating": "0.1.0",
-    "GeekLearning.Storage.FileSystem": "0.1.0-unstable0028",
+    "GeekLearning.Storage.FileSystem": "0.2.0",
+    "GeekLearning.Templating.Handlebars": "0.2.1",
     "GeekLearning.Email": "*"
   },
 
