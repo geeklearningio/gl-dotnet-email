@@ -21,7 +21,7 @@
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-rc2-final",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-rc2-final",
     "GeekLearning.Storage.FileSystem": "0.2.0",
-    "GeekLearning.Templating.Handlebars": "0.2.1",
+    "GeekLearning.Templating.Handlebars": "0.3.0-beta0001",
     "GeekLearning.Email": "*"
   },
 
