@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "GeekLearning.Email", "src\GeekLearning.Email\GeekLearning.Email.xproj", "{474EEA84-EBFB-4925-BDC2-619C21E7EBC9}"
 EndProject
@@ -20,6 +20,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{6898
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "GeekLearning.Email.Samples", "samples\GeekLearning.Email.Samples\GeekLearning.Email.Samples.xproj", "{EDA94EFF-7FF4-4C79-BC52-93BC7E696FF6}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "GeekLearning.Templating", "..\gl-dotnet-templating\src\GeekLearning.Templating\GeekLearning.Templating.xproj", "{369E8A80-AC62-4F8E-9CE3-AE5E6A35925E}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "GeekLearning.Templating.Handlebars", "..\gl-dotnet-templating\src\GeekLearning.Templating.Handlebars\GeekLearning.Templating.Handlebars.xproj", "{E72256FA-DFF3-4487-AA94-E6D5BD1BDD2D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +38,14 @@ Global
 		{EDA94EFF-7FF4-4C79-BC52-93BC7E696FF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDA94EFF-7FF4-4C79-BC52-93BC7E696FF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDA94EFF-7FF4-4C79-BC52-93BC7E696FF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{369E8A80-AC62-4F8E-9CE3-AE5E6A35925E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{369E8A80-AC62-4F8E-9CE3-AE5E6A35925E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{369E8A80-AC62-4F8E-9CE3-AE5E6A35925E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{369E8A80-AC62-4F8E-9CE3-AE5E6A35925E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E72256FA-DFF3-4487-AA94-E6D5BD1BDD2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E72256FA-DFF3-4487-AA94-E6D5BD1BDD2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E72256FA-DFF3-4487-AA94-E6D5BD1BDD2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E72256FA-DFF3-4487-AA94-E6D5BD1BDD2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
