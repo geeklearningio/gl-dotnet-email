@@ -243,3 +243,4 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/tests/GeekLearning.Email.Integration.Test/appsettings.development.json
