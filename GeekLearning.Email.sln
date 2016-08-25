@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "items", "items", "{96D48864
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
+		GitVersion.yml = GitVersion.yml
 		global.json = global.json
 		LICENSE.md = LICENSE.md
 		README.md = README.md
@@ -19,6 +20,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{68985ADC-F984-4594-AF38-6A6EEFB2DFDE}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "GeekLearning.Email.Samples", "samples\GeekLearning.Email.Samples\GeekLearning.Email.Samples.xproj", "{EDA94EFF-7FF4-4C79-BC52-93BC7E696FF6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{8DF5B138-1052-4991-88EF-FF23AE1DCC34}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "GeekLearning.Email.Integration.Test", "tests\GeekLearning.Email.Integration.Test\GeekLearning.Email.Integration.Test.xproj", "{86B313ED-41D4-424F-A172-7D0E8EEE5E49}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +39,10 @@ Global
 		{EDA94EFF-7FF4-4C79-BC52-93BC7E696FF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDA94EFF-7FF4-4C79-BC52-93BC7E696FF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDA94EFF-7FF4-4C79-BC52-93BC7E696FF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86B313ED-41D4-424F-A172-7D0E8EEE5E49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86B313ED-41D4-424F-A172-7D0E8EEE5E49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86B313ED-41D4-424F-A172-7D0E8EEE5E49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86B313ED-41D4-424F-A172-7D0E8EEE5E49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -41,5 +50,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{474EEA84-EBFB-4925-BDC2-619C21E7EBC9} = {01E85AC0-EFEF-4564-9EE9-9A124776B72E}
 		{EDA94EFF-7FF4-4C79-BC52-93BC7E696FF6} = {68985ADC-F984-4594-AF38-6A6EEFB2DFDE}
+		{86B313ED-41D4-424F-A172-7D0E8EEE5E49} = {8DF5B138-1052-4991-88EF-FF23AE1DCC34}
 	EndGlobalSection
 EndGlobal
