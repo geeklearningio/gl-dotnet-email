@@ -42,7 +42,7 @@
         }
       }
     },
-    "net451": {
+    "net46": {
       "frameworkAssemblies": {
       },
       "dependencies": {

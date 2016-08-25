@@ -1,15 +1,15 @@
-﻿namespace GeekLearning.Email.Internal
+﻿namespace GeekLearning.Email.Providers.InMemory
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public class InMemoryEmailSender : IEmailSender
     {
-        public List<TestEmail> SentEmails { get; private set; } = new List<TestEmail>();
+        public IList<InMemoryEmail> SentEmails { get; private set; } = new List<InMemoryEmail>();
 
         public Task SendEmailAsync(string subject, string message, params IEmailAddress[] to)
         {
-            this.SentEmails.Add(new TestEmail
+            this.SentEmails.Add(new InMemoryEmail
             {
                 Subject = subject,
                 Message = message,
@@ -21,7 +21,7 @@
 
         public Task SendEmailAsync(IEmailAddress from, string subject, string message, params IEmailAddress[] to)
         {
-            this.SentEmails.Add(new TestEmail
+            this.SentEmails.Add(new InMemoryEmail
             {
                 From = from,
                 Subject = subject,
@@ -34,7 +34,7 @@
 
         public Task SendTemplatedEmail<T>(string templateKey, T context, params IEmailAddress[] to)
         {
-            this.SentEmails.Add(new TestEmail
+            this.SentEmails.Add(new InMemoryEmail
             {
                 TemplateKey = templateKey,
                 Context = context,
@@ -46,7 +46,7 @@
 
         public Task SendTemplatedEmail<T>(IEmailAddress from, string templateKey, T context, params IEmailAddress[] to)
         {
-            this.SentEmails.Add(new TestEmail
+            this.SentEmails.Add(new InMemoryEmail
             {
                 From = from,
                 TemplateKey = templateKey,
@@ -56,20 +56,5 @@
 
             return Task.CompletedTask;
         }
-    }
-
-    public class TestEmail
-    {
-        public string Subject { get; set; }
-
-        public string Message { get; set; }
-
-        public IEmailAddress[] To { get; set; }
-
-        public IEmailAddress From { get; set; }
-
-        public string TemplateKey { get; set; }
-
-        public object Context { get; set; }
     }
 }

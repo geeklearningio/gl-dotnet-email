@@ -1,13 +1,21 @@
 ﻿namespace GeekLearning.Email
 {
     using Microsoft.Extensions.DependencyInjection;
-    using Templating;
+    using Providers.InMemory;
+    using Providers.SendGrid;
 
     public static class GeekLearningEmailExtensions
     {
-        public static IServiceCollection AddEmail(this IServiceCollection services)
+        public static IServiceCollection AddEmailSendGrid(this IServiceCollection services)
         {
-            services.AddSingleton<IEmailSender, Internal.EmailSender>();
+            services.AddSingleton<IEmailSender, SendGridEmailSender>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddEmailInMemory(this IServiceCollection services)
+        {
+            services.AddSingleton<IEmailSender, InMemoryEmailSender>();
 
             return services;
         }

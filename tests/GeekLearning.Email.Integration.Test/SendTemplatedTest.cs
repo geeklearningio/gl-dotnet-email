@@ -1,4 +1,5 @@
-﻿using GeekLearning.Storage;
+﻿using GeekLearning.Email.Providers.SendGrid;
+using GeekLearning.Storage;
 using GeekLearning.Templating;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -44,7 +45,7 @@ namespace GeekLearning.Email.Integration.Test
                     Recipients = new List<string>()
                 }
             });
-            var emailSender = new Internal.EmailSender(options,
+            var emailSender = new SendGridEmailSender(options,
                 this.storeFixture.Services.GetRequiredService<ITemplateLoaderFactory>(),
                 this.storeFixture.Services.GetRequiredService<IStorageFactory>()
                 );

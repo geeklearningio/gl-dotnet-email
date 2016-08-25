@@ -1,5 +1,6 @@
-﻿namespace GeekLearning.Email.Internal
+﻿namespace GeekLearning.Email.Providers.SendGrid
 {
+    using Internal;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
     using Storage;
@@ -10,12 +11,12 @@
     using System.Threading.Tasks;
     using Templating;
 
-    public class EmailSender : IEmailSender
+    public class SendGridEmailSender : IEmailSender
     {
         private EmailOptions options;
         private ITemplateLoader templateLoader;
 
-        public EmailSender(IOptions<EmailOptions> options, ITemplateLoaderFactory templateLoaderFactory, IStorageFactory storageFactory)
+        public SendGridEmailSender(IOptions<EmailOptions> options, ITemplateLoaderFactory templateLoaderFactory, IStorageFactory storageFactory)
         {
             this.options = options.Value;
             this.templateLoader = templateLoaderFactory.Create(storageFactory.GetStore(options.Value.TemplateStorage));
