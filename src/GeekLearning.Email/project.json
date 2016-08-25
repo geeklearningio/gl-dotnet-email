@@ -17,7 +17,7 @@
   },
 
   "frameworks": {
-    "net451": { },
+    "net46": { },
     "netstandard1.5": {
       "imports": [
         "dotnet5.6",
