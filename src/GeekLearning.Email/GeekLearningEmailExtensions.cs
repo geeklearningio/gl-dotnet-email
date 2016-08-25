@@ -3,19 +3,23 @@
     using Microsoft.Extensions.DependencyInjection;
     using Providers.InMemory;
     using Providers.SendGrid;
+    using System;
 
     public static class GeekLearningEmailExtensions
     {
-        public static IServiceCollection AddEmailSendGrid(this IServiceCollection services)
+        public static IServiceCollection AddEmail(this IServiceCollection services, EmailProvider emailProvider)
         {
-            services.AddSingleton<IEmailSender, SendGridEmailSender>();
-
-            return services;
-        }
-
-        public static IServiceCollection AddEmailInMemory(this IServiceCollection services)
-        {
-            services.AddSingleton<IEmailSender, InMemoryEmailSender>();
+            switch (emailProvider)
+            {
+                case EmailProvider.InMemory:
+                    services.AddSingleton<IEmailSender, InMemoryEmailSender>();
+                    break;
+                case EmailProvider.SendGrid:
+                    services.AddSingleton<IEmailSender, SendGridEmailSender>();
+                    break;
+                default:
+                    throw new NotSupportedException();
+            }
 
             return services;
         }

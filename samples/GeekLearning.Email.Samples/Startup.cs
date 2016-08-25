@@ -38,7 +38,7 @@ namespace GeekLearning.Email.Samples
             services.Configure<StorageOptions>(Configuration.GetSection("Storage"));
             services.AddTemplating().AddHandlebars();
 
-            services.AddEmailSendGrid();
+            services.AddEmail(EmailProvider.SendGrid);
             services.Configure<EmailOptions>(Configuration.GetSection("Email"));
         }
 
