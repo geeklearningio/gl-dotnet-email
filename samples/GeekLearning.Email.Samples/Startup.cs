@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using GeekLearning.Storage;
-using GeekLearning.Templating;
-
-namespace GeekLearning.Email.Samples
+﻿namespace GeekLearning.Email.Samples
 {
+    using InMemory;
+    using Smtp;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
+    using SendGrid;
+    using Storage;
+    using Templating;
+
     public class Startup
     {
         public Startup(IHostingEnvironment env)
@@ -38,7 +37,10 @@ namespace GeekLearning.Email.Samples
             services.Configure<StorageOptions>(Configuration.GetSection("Storage"));
             services.AddTemplating().AddHandlebars();
 
-            services.AddEmail(EmailProvider.SendGrid);
+            services.AddEmail()
+                .AddSendGridEmail()
+                .AddInMemoryEmail()
+                .AddSmtpEmail();
             services.Configure<EmailOptions>(Configuration.GetSection("Email"));
         }
 

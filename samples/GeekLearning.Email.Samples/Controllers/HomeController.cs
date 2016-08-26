@@ -20,7 +20,7 @@ namespace GeekLearning.Email.Samples.Controllers
             return View();
         }
 
-        public IActionResult SendEmail()
+        public async Task<IActionResult> SendEmail()
         {
             var user = new User
             {
@@ -34,7 +34,7 @@ namespace GeekLearning.Email.Samples.Controllers
                 User = user
             };
 
-            this.emailSender.SendTemplatedEmail("Invitation", context, user);
+            await this.emailSender.SendTemplatedEmailAsync("Invitation", context, user);
 
             return RedirectToAction("Index");
         }

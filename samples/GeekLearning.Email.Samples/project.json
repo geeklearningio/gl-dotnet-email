@@ -22,7 +22,10 @@
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
     "GeekLearning.Storage.FileSystem": "0.3.0-*",
     "GeekLearning.Templating.Handlebars": "0.3.0-*",
-    "GeekLearning.Email": "*"
+    "GeekLearning.Email": "*",
+    "GeekLearning.Email.SendGrid": "*",
+    "GeekLearning.Email.InMemory": "*",
+    "GeekLearning.Email.Smtp": "*"
   },
 
   "tools": {

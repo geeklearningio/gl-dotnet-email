@@ -1,17 +1,15 @@
-﻿namespace GeekLearning.Email.Providers.InMemory
+﻿namespace GeekLearning.Email.InMemory
 {
     public class InMemoryEmail
     {
         public string Subject { get; set; }
 
-        public string Message { get; set; }
+        public string MessageText { get; set; }
+
+        public string MessageHtml { get; set; }
 
         public IEmailAddress[] To { get; set; }
 
         public IEmailAddress From { get; set; }
-
-        public string TemplateKey { get; set; }
-
-        public object Context { get; set; }
     }
 }
