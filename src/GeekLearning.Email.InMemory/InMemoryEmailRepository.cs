@@ -7,15 +7,16 @@
     {
         private List<InMemoryEmail> innerEmailStore = new List<InMemoryEmail>();
 
-        public IReadOnlyCollection<InMemoryEmail> Store { get; private set; }
-
-        public InMemoryEmailRepository()
+        public IReadOnlyCollection<InMemoryEmail> Store
         {
-            this.Store = new ReadOnlyCollection<InMemoryEmail>(innerEmailStore);
+            get
+            {
+                return new ReadOnlyCollection<InMemoryEmail>(innerEmailStore);
+            }
         }
 
         public void Save(InMemoryEmail email)
-        {
+        {            
             this.innerEmailStore.Add(email);
         }
     }
