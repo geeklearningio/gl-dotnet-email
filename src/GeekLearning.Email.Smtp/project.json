@@ -1,23 +1,23 @@
-{
+﻿{
   "version": "1.0.0-*",
-  "description": "Templated Emails Library",
+  "description": "SMTP implementation of GeekLearning.Email, usefull when developping with SMTP4Dev.",
   "authors": [ "Geek Learning", "Adrien Siffermann", "Cyprien Autexier" ],
   "packOptions": {
-    "tags": [ ],
+    "tags": [],
     "projectUrl": "",
     "licenseUrl": ""
   },
 
   "dependencies": {
     "NETStandard.Library": "1.6.0",
-    "Microsoft.Extensions.Options": "1.0.0",
-    "Microsoft.Extensions.Caching.Abstractions": "1.0.0",
-    "Newtonsoft.Json": "9.0.1",
-    "GeekLearning.Templating": "0.3.0-*"
+
+    "MailKit": "1.4.2.1",
+
+    "GeekLearning.Email": "*"
   },
 
   "frameworks": {
-    "net451": { },
+    "net451": {},
     "netstandard1.5": {
       "imports": [
         "dotnet5.6",

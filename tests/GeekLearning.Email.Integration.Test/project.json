@@ -14,6 +14,7 @@
     "GeekLearning.Templating": "0.3.0-*",
     "GeekLearning.Templating.Handlebars": "0.3.0-*",
     "GeekLearning.Email": "*",
+    "GeekLearning.Email.SendGrid": "*",
     "GeekLearning.Storage": "0.3.0-*",
     "GeekLearning.Storage.Azure": "0.3.0-*",
     "GeekLearning.Storage.FileSystem": "0.3.0-*",
