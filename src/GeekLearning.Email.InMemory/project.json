@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "1.0.0-*",
   "description": "In memory implementation of GeekLearning.Email, usefull for testing purposes.",
   "authors": [ "Geek Learning", "Arnaud Auroux", "Adrien Siffermann", "Cyprien Autexier" ],
@@ -10,7 +10,6 @@
 
   "dependencies": {
     "NETStandard.Library": "1.6.0",
-
     "GeekLearning.Email": "*"
   },
 

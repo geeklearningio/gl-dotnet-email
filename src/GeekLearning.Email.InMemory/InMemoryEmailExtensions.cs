@@ -8,6 +8,7 @@
         public static IServiceCollection AddInMemoryEmail(this IServiceCollection services)
         {
             services.TryAddEnumerable(ServiceDescriptor.Transient<IEmailProviderType, InMemoryEmailProviderType>());
+            services.AddSingleton<IInMemoryEmailRepository, InMemoryEmailRepository>();
             return services;
         }
     }

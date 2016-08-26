@@ -6,15 +6,16 @@
 
     public class InMemoryEmailProvider : IEmailProvider
     {
-        public InMemoryEmailProvider(IEmailProviderOptions options)
-        {
-        }
+        private IInMemoryEmailRepository inMemoryEmailRepository;
 
-        public IList<InMemoryEmail> SentEmails { get; private set; } = new List<InMemoryEmail>();
+        public InMemoryEmailProvider(IEmailProviderOptions options, IInMemoryEmailRepository inMemoryEmailRepository)
+        {
+            this.inMemoryEmailRepository = inMemoryEmailRepository;
+        }
 
         public Task SendEmailAsync(IEmailAddress from, IEnumerable<IEmailAddress> recipients, string subject, string text, string html)
         {
-            this.SentEmails.Add(new InMemoryEmail
+            this.inMemoryEmailRepository.Save(new InMemoryEmail
             {
                 Subject = subject,
                 MessageText = text,
