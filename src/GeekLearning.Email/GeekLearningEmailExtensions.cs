@@ -1,14 +1,13 @@
 ﻿namespace GeekLearning.Email
 {
     using Microsoft.Extensions.DependencyInjection;
-    using Templating;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
 
     public static class GeekLearningEmailExtensions
     {
         public static IServiceCollection AddEmail(this IServiceCollection services)
         {
-            services.AddSingleton<IEmailSender, Internal.EmailSender>();
-
+            services.TryAddTransient<IEmailSender, Internal.EmailSender>();
             return services;
         }
     }

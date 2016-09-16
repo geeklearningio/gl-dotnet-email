@@ -11,12 +11,6 @@
   "testRunner": "xunit",
 
   "dependencies": {
-    "GeekLearning.Templating": "0.3.0-*",
-    "GeekLearning.Templating.Handlebars": "0.3.0-*",
-    "GeekLearning.Email": "*",
-    "GeekLearning.Storage": "0.3.0-*",
-    "GeekLearning.Storage.Azure": "0.3.0-*",
-    "GeekLearning.Storage.FileSystem": "0.3.0-*",
     "Microsoft.NETCore.Platforms": "1.0.1",
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
     "xunit": "2.2.0-beta2-build3300",
@@ -29,7 +23,14 @@
     "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0",
     "Microsoft.Extensions.Options": "1.0.0",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
-    "Microsoft.Extensions.Caching.Memory": "1.0.0"
+    "Microsoft.Extensions.Caching.Memory": "1.0.0",
+
+    "GeekLearning.Templating.Handlebars": "0.4.*",
+    "GeekLearning.Storage.Azure": "0.4.*",
+    "GeekLearning.Storage.FileSystem": "0.4.*",
+
+    "GeekLearning.Email": "*",
+    "GeekLearning.Email.SendGrid": "*"
   },
 
   "frameworks": {
@@ -38,15 +39,10 @@
       "dependencies": {
         "Microsoft.NETCore.App": {
           "type": "platform",
-          "version": "1.0.0"
+          "version": "1.0.1"
         }
       }
     },
-    "net451": {
-      "frameworkAssemblies": {
-      },
-      "dependencies": {
-      }
-    }
+    "net46": {}
   }
 }

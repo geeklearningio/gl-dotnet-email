@@ -25,18 +25,25 @@ namespace GeekLearning.Email.Integration.Test
         {
             var options = Microsoft.Extensions.Options.Options.Create(new EmailOptions
             {
+                Provider = new EmailProviderOptions
+                {
+                    Type = "SendGrid",
+                    Parameters = new Dictionary<string, string>
+                    {
+                        { "Key", storeFixture.SendGridKey },
+                        { "User", storeFixture.SendGridUser },
+                    },
+                },
                 TemplateStorage = storeName,
                 DefaultSender = new Internal.EmailAddress
                 {
                     DisplayName = "test user",
                     Email = "no-reply@test.geeklearning.io"
                 },
-                Key = storeFixture.SendGridKey,
-                User = storeFixture.SendGridUser,
-                Mockup = new EmailOptions.MockupOptions
+                Mockup = new MockupOptions
                 {
                     Disclaimer = "",
-                    Exceptions = new EmailOptions.MockupExceptionsOptions
+                    Exceptions = new MockupExceptionsOptions
                     {
                         Domains = new List<string>(),
                         Emails = new List<string>(),
@@ -44,12 +51,19 @@ namespace GeekLearning.Email.Integration.Test
                     Recipients = new List<string>()
                 }
             });
-            var emailSender = new Internal.EmailSender(options,
-                this.storeFixture.Services.GetRequiredService<ITemplateLoaderFactory>(),
-                this.storeFixture.Services.GetRequiredService<IStorageFactory>()
-                );
 
-            await emailSender.SendTemplatedEmail("Notification1", new { }, new Internal.EmailAddress
+            var providerTypes = new List<IEmailProviderType>
+            {
+                new SendGrid.SendGridEmailProviderType(),
+            };
+
+            var emailSender = new Internal.EmailSender(
+                providerTypes,
+                options,
+                this.storeFixture.Services.GetRequiredService<IStorageFactory>(),
+                this.storeFixture.Services.GetRequiredService<ITemplateLoaderFactory>());
+
+            await emailSender.SendTemplatedEmailAsync("Notification1", new { }, new Internal.EmailAddress
             {
                 DisplayName = "test user",
                 Email = "no-reply@test.geeklearning.io"
