@@ -13,16 +13,11 @@
     "Microsoft.Extensions.Options": "1.0.0",
     "Microsoft.Extensions.Caching.Abstractions": "1.0.0",
     "Newtonsoft.Json": "9.0.1",
-    "GeekLearning.Templating": "0.3.0-*"
+    "GeekLearning.Templating": "0.4.*"
   },
 
   "frameworks": {
-    "net451": { },
-    "netstandard1.5": {
-      "imports": [
-        "dotnet5.6",
-        "portable-net45+win8"
-      ]
-    }
+    "net451": {},
+    "netstandard1.5": {}
   }
 }
