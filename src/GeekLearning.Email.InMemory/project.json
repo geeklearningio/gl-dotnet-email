@@ -9,12 +9,11 @@
   },
 
   "dependencies": {
-    "NETStandard.Library": "1.6.0",
+    "NETStandard.Library": "1.6.1",
     "GeekLearning.Email": "*"
   },
 
   "frameworks": {
-    "net46": {},
-    "netstandard1.5": {}
+    "netstandard1.3": {}
   }
 }
