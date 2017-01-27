@@ -11,35 +11,35 @@
   "testRunner": "xunit",
 
   "dependencies": {
-    "Microsoft.NETCore.Platforms": "1.0.1",
+    "Microsoft.NETCore.Platforms": "1.1.0",
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
     "xunit": "2.2.0-beta2-build3300",
-    "xunit.runner.visualstudio": "2.2.0-beta2-build1149",
-    "Microsoft.Extensions.DependencyInjection": "1.0.0",
-    "Microsoft.Extensions.PlatformAbstractions": "1.0.0",
-    "Microsoft.Extensions.Configuration": "1.0.0",
-    "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
-    "Microsoft.Extensions.Configuration.Json": "1.0.0",
-    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0",
-    "Microsoft.Extensions.Options": "1.0.0",
-    "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
-    "Microsoft.Extensions.Caching.Memory": "1.0.0",
+    "xunit.runner.visualstudio": "2.2.0-beta3-build1187",
+    "Microsoft.Extensions.DependencyInjection": "1.1.0",
+    "Microsoft.Extensions.PlatformAbstractions": "1.1.0",
+    "Microsoft.Extensions.Configuration": "1.1.0",
+    "Microsoft.Extensions.Configuration.FileExtensions": "1.1.0",
+    "Microsoft.Extensions.Configuration.Json": "1.1.0",
+    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.1.0",
+    "Microsoft.Extensions.Options": "1.1.0",
+    "Microsoft.Extensions.Options.ConfigurationExtensions": "1.1.0",
+    "Microsoft.Extensions.Caching.Memory": "1.1.0",
 
-    "GeekLearning.Templating.Handlebars": "0.4.*",
-    "GeekLearning.Storage.Azure": "0.4.*",
-    "GeekLearning.Storage.FileSystem": "0.4.*",
+    "GeekLearning.Templating.Handlebars": "0.5.0-*",
+    "GeekLearning.Storage.Azure": "0.6.0-*",
+    "GeekLearning.Storage.FileSystem": "0.6.0-*",
 
     "GeekLearning.Email": "*",
     "GeekLearning.Email.SendGrid": "*"
   },
 
   "frameworks": {
-    "netcoreapp1.0": {
+    "netcoreapp1.1": {
       "imports": [ "dotnet", "portable-net45+win8" ],
       "dependencies": {
         "Microsoft.NETCore.App": {
           "type": "platform",
-          "version": "1.0.1"
+          "version": "1.1.0"
         }
       }
     },

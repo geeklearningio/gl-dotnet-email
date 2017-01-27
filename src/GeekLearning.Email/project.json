@@ -9,15 +9,14 @@
   },
 
   "dependencies": {
-    "NETStandard.Library": "1.6.0",
-    "Microsoft.Extensions.Options": "1.0.0",
-    "Microsoft.Extensions.Caching.Abstractions": "1.0.0",
+    "NETStandard.Library": "1.6.1",
+    "Microsoft.Extensions.Options": "1.1.0",
+    "Microsoft.Extensions.Caching.Abstractions": "1.1.0",
     "Newtonsoft.Json": "9.0.1",
-    "GeekLearning.Templating": "0.4.*"
+    "GeekLearning.Templating": "0.5.0-*"
   },
 
   "frameworks": {
-    "net451": {},
-    "netstandard1.5": {}
+    "netstandard1.1": {}
   }
 }
