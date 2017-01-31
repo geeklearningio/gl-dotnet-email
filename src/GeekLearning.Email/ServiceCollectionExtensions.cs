@@ -3,7 +3,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
 
-    public static class GeekLearningEmailExtensions
+    public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddEmail(this IServiceCollection services)
         {

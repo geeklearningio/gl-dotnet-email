@@ -1,9 +1,10 @@
-﻿namespace GeekLearning.Email.SendGrid
+﻿namespace GeekLearning.Email
 {
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
+    using SendGrid;
 
-    public static class SendGridEmailExtensions
+    public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddSendGridEmail(this IServiceCollection services)
         {

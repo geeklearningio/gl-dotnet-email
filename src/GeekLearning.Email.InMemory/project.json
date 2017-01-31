@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0-*",
-  "description": "In memory implementation of GeekLearning.Email, usefull for testing purposes.",
+  "version": "0.0.1-*",
+  "description": "In Memory Provider for Geek Learning Email Abstractions.",
   "authors": [ "Geek Learning", "Arnaud Auroux", "Adrien Siffermann", "Cyprien Autexier" ],
   "packOptions": {
     "tags": [],
@@ -10,10 +10,11 @@
 
   "dependencies": {
     "NETStandard.Library": "1.6.1",
+
     "GeekLearning.Email": "*"
   },
 
   "frameworks": {
-    "netstandard1.3": {}
+    "netstandard1.1": {}
   }
 }

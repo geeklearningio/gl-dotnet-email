@@ -1,6 +1,6 @@
 ﻿{
-  "version": "1.0.0-*",
-  "description": "SendGrid implementation of GeekLearning.Email, usefull when deploying to Azure.",
+  "version": "0.0.1-*",
+  "description": "SendGrid Provider for Geek Learning Email Abstractions.",
   "authors": [ "Geek Learning", "Adrien Siffermann", "Cyprien Autexier" ],
   "packOptions": {
     "tags": [],
