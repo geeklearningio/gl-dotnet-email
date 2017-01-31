@@ -1,15 +1,11 @@
 ﻿namespace GeekLearning.Email.SendGrid
 {
-    using Internal;
-    using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
-    using Storage;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using Templating;
 
     public class SendGridEmailProvider : IEmailProvider
     {

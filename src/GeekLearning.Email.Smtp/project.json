@@ -1,6 +1,6 @@
 ﻿{
-  "version": "1.0.0-*",
-  "description": "SMTP implementation of GeekLearning.Email, usefull when developping with SMTP4Dev.",
+  "version": "0.0.1-*",
+  "description": "SMTP Provider for Geek Learning Email Abstractions.",
   "authors": [ "Geek Learning", "Adrien Siffermann", "Cyprien Autexier" ],
   "packOptions": {
     "tags": [],
@@ -11,13 +11,13 @@
   "dependencies": {
     "NETStandard.Library": "1.6.1",
 
-    "MailKit": "1.10.1",
+    "MailKit": "1.10.2",
 
     "GeekLearning.Email": "*"
   },
 
   "frameworks": {
-    "net451": {},
+    "net45": {},
     "netstandard1.3": {}
   }
 }
