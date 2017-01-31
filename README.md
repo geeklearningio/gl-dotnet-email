@@ -99,7 +99,7 @@ emails.
 
         public HomeController(IEmailSender emailSender)
         {
-            this.emailSender = emailSender;
+             this.emailSender = emailSender;
         }
 
         public async Task<IActionResult> SendEmail()
