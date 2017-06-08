@@ -25,7 +25,7 @@
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.development.json", optional: true).
                 AddInMemoryCollection(new KeyValuePair<string, string>[] {
-                    new KeyValuePair<string, string>("Storage:Stores:azure:Parameters:Container", Guid.NewGuid().ToString("N").ToLower())
+                    new KeyValuePair<string, string>("Storage:Stores:azure:FolderName", Guid.NewGuid().ToString("N").ToLower())
                 });
 
             this.Configuration = builder.Build();
@@ -38,13 +38,11 @@
             services.AddMemoryCache();
             services.AddOptions();
 
-            services.AddStorage()
+            services.AddStorage(Configuration)
                 .AddAzureStorage()
                 .AddFileSystemStorage(BasePath);
             services.AddTemplating()
                 .AddHandlebars();
-
-            services.Configure<StorageOptions>(Configuration.GetSection("Storage"));
 
             this.Services = services.BuildServiceProvider();
 
@@ -63,7 +61,7 @@
 
         private void ResetFileSystemStore()
         {
-            var directoryName = Configuration["Storage:Stores:filesystem:Parameters:Path"];
+            var directoryName = Configuration["Storage:Stores:filesystem:FolderName"];
             var process = Process.Start(new ProcessStartInfo("robocopy.exe")
             {
                 Arguments = $"\"{System.IO.Path.Combine(BasePath, "SampleDirectory")}\" \"{System.IO.Path.Combine(BasePath, directoryName)}\" /MIR"
@@ -81,9 +79,9 @@
                 Environment.ExpandEnvironmentVariables(Configuration["AzCopyPath"]),
                 "AzCopy.exe");
 
-            cloudStorageAccount = CloudStorageAccount.Parse(Configuration["Storage:Stores:azure:Parameters:ConnectionString"]);
+            cloudStorageAccount = CloudStorageAccount.Parse(Configuration["Storage:Stores:azure:ConnectionString"]);
             var key = cloudStorageAccount.Credentials.ExportBase64EncodedKey();
-            var containerName = Configuration["Storage:Stores:azure:Parameters:Container"];
+            var containerName = Configuration["Storage:Stores:azure:FolderName"];
             var dest = cloudStorageAccount.BlobStorageUri.PrimaryUri.ToString() + containerName;
 
             var client = cloudStorageAccount.CreateCloudBlobClient();

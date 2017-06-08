@@ -9,7 +9,7 @@
 GeekLearning.Email provide an abstraction over various email providers. It brings builtin templates
 support thanks to our [templating library](https://github.com/geeklearningio/gl-dotnet-templating). 
 It also bring email interception support so you can easily redirect email to developers/tester 
-inboxes in developement environement.
+inboxes in developement environement. 
 
 ## Getting Started
 
