@@ -29,47 +29,59 @@
         }
 
         public async Task SendEmailAsync(
-            IEmailAddress from, 
-            IEnumerable<IEmailAddress> recipients, 
-            string subject, 
-            string text, 
+            IEmailAddress from,
+            IEnumerable<IEmailAddress> recipients,
+            string subject,
+            string text,
             string html)
         {
-            var client = new HttpClient();
-            var message = new HttpRequestMessage(HttpMethod.Post, "https://api.sendgrid.com/api/mail.send.json");
+            using (var client = new HttpClient())
+            {
+                var message = new HttpRequestMessage(HttpMethod.Post, "https://api.sendgrid.com/api/mail.send.json");
 
-            var variables = new List<KeyValuePair<string, string>>()
-            {
-                new KeyValuePair<string, string>("api_user", this.apiUser),
-                new KeyValuePair<string, string>("api_key", this.apiKey),
-                new KeyValuePair<string, string>("from", from.Email),
-                new KeyValuePair<string, string>("fromname", from.DisplayName),
-                new KeyValuePair<string, string>("subject", subject),
-                new KeyValuePair<string, string>("text", text),
-                new KeyValuePair<string, string>("html", html),
-            };
-
-            if (recipients.Count() == 1)
-            {
-                variables.Add(new KeyValuePair<string, string>("to", recipients.First().Email));
-                variables.Add(new KeyValuePair<string, string>("toname", recipients.First().DisplayName));
-            }
-            else
-            {
-                foreach (var recipient in recipients)
+                var variables = new List<KeyValuePair<string, string>>()
                 {
-                    variables.Add(new KeyValuePair<string, string>("to[]", recipient.Email));
-                    variables.Add(new KeyValuePair<string, string>("toname[]", recipient.DisplayName));
+                    new KeyValuePair<string, string>("api_user", this.apiUser),
+                    new KeyValuePair<string, string>("api_key", this.apiKey),
+                    new KeyValuePair<string, string>("from", from.Email),
+                    new KeyValuePair<string, string>("fromname", from.DisplayName),
+                    new KeyValuePair<string, string>("subject", subject),
+                    new KeyValuePair<string, string>("text", text),
+                    new KeyValuePair<string, string>("html", html),
+                };
+
+                if (recipients.Count() == 1)
+                {
+                    variables.Add(new KeyValuePair<string, string>("to", recipients.First().Email));
+                    variables.Add(new KeyValuePair<string, string>("toname", recipients.First().DisplayName));
                 }
-            }
+                else
+                {
+                    foreach (var recipient in recipients)
+                    {
+                        variables.Add(new KeyValuePair<string, string>("to[]", recipient.Email));
+                        variables.Add(new KeyValuePair<string, string>("toname[]", recipient.DisplayName));
+                    }
+                }
 
-            message.Content = new FormUrlEncodedContent(variables);
+                using (var content = new MultipartFormDataContent())
+                {
+                    foreach (var variable in variables)
+                    {
+                        content.Add(new StringContent(variable.Value), variable.Key);
+                    }
 
-            var response = await client.SendAsync(message);
-            var responseBody = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Cannot Send Email");
+                    message.Content = content;
+
+                    using (var response = await client.SendAsync(message))
+                    {
+                        var responseBody = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            throw new Exception("Cannot Send Email");
+                        }
+                    }
+                }
             }
         }
     }
