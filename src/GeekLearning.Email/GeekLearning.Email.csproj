@@ -14,7 +14,7 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="1.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
-    <PackageReference Include="GeekLearning.Templating" Version="0.5.0-alpha0018" />
+    <PackageReference Include="GeekLearning.Templating" Version="0.5.1" />
   </ItemGroup>
 
   <ItemGroup>
