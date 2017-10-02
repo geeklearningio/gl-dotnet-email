@@ -1,24 +1,20 @@
 ﻿namespace GeekLearning.Email.Integration.Test
 {
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.PlatformAbstractions;
+    using Microsoft.WindowsAzure.Storage;
+    using Microsoft.WindowsAzure.Storage.Blob;
     using Storage;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Xunit;
-    using Microsoft.Extensions.PlatformAbstractions;
-    using Microsoft.Extensions.Configuration;
     using System.Diagnostics;
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Blob;
-    using GeekLearning.Templating;
+    using Templating;
 
     public class StoresFixture : IDisposable
     {
         private CloudStorageAccount cloudStorageAccount;
         private CloudBlobContainer container;
-
 
         public StoresFixture()
         {
@@ -29,7 +25,7 @@
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.development.json", optional: true).
                 AddInMemoryCollection(new KeyValuePair<string, string>[] {
-                    new KeyValuePair<string, string>("Storage:Stores:azure:Parameters:Container", Guid.NewGuid().ToString("N").ToLower())
+                    new KeyValuePair<string, string>("Storage:Stores:azure:FolderName", Guid.NewGuid().ToString("N").ToLower())
                 });
 
             this.Configuration = builder.Build();
@@ -42,21 +38,19 @@
             services.AddMemoryCache();
             services.AddOptions();
 
-            services.AddStorage()
+            services.AddStorage(Configuration)
                 .AddAzureStorage()
                 .AddFileSystemStorage(BasePath);
             services.AddTemplating()
                 .AddHandlebars();
 
-            services.Configure<StorageOptions>(Configuration.GetSection("Storage"));
-
             this.Services = services.BuildServiceProvider();
 
             ResetStores();
-
         }
 
         public string SendGridKey { get; set; }
+
         public string SendGridUser { get; set; }
 
         private void ResetStores()
@@ -67,17 +61,13 @@
 
         private void ResetFileSystemStore()
         {
-            var directoryName = Configuration["Storage:Stores:filesystem:Parameters:Path"];
+            var directoryName = Configuration["Storage:Stores:filesystem:FolderName"];
             var process = Process.Start(new ProcessStartInfo("robocopy.exe")
             {
                 Arguments = $"\"{System.IO.Path.Combine(BasePath, "SampleDirectory")}\" \"{System.IO.Path.Combine(BasePath, directoryName)}\" /MIR"
             });
 
-            if (process.WaitForExit(30000))
-            {
-
-            }
-            else
+            if (!process.WaitForExit(30000))
             {
                 throw new TimeoutException("File system store was not reset properly");
             }
@@ -89,10 +79,9 @@
                 Environment.ExpandEnvironmentVariables(Configuration["AzCopyPath"]),
                 "AzCopy.exe");
 
-
-            cloudStorageAccount = Microsoft.WindowsAzure.Storage.CloudStorageAccount.Parse(Configuration["Storage:Stores:azure:Parameters:ConnectionString"]);
+            cloudStorageAccount = CloudStorageAccount.Parse(Configuration["Storage:Stores:azure:ConnectionString"]);
             var key = cloudStorageAccount.Credentials.ExportBase64EncodedKey();
-            var containerName = Configuration["Storage:Stores:azure:Parameters:Container"];
+            var containerName = Configuration["Storage:Stores:azure:FolderName"];
             var dest = cloudStorageAccount.BlobStorageUri.PrimaryUri.ToString() + containerName;
 
             var client = cloudStorageAccount.CreateCloudBlobClient();
@@ -105,18 +94,16 @@
                 Arguments = $"/Source:\"{System.IO.Path.Combine(BasePath, "SampleDirectory")}\" /Dest:\"{dest}\" /DestKey:{key} /S"
             });
 
-            if (process.WaitForExit(30000))
-            {
-
-            }
-            else
+            if (!process.WaitForExit(30000))
             {
                 throw new TimeoutException("Azure store was not reset properly");
             }
         }
 
         public IConfigurationRoot Configuration { get; }
+
         public IServiceProvider Services { get; }
+
         public string BasePath { get; }
 
         public void Dispose()

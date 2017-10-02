@@ -1,9 +1,10 @@
-﻿namespace GeekLearning.Email.Smtp
+﻿namespace GeekLearning.Email
 {
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
+    using Smtp;
 
-    public static class SmtpEmailExtensions
+    public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddSmtpEmail(this IServiceCollection services)
         {

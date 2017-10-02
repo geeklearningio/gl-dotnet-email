@@ -33,8 +33,7 @@
             // Add framework services.
             services.AddMvc();
 
-            services.AddStorage().AddFileSystemStorage(this.HostingEnvironment.ContentRootPath);
-            services.Configure<StorageOptions>(Configuration.GetSection("Storage"));
+            services.AddStorage(Configuration).AddFileSystemStorage(this.HostingEnvironment.ContentRootPath);
             services.AddTemplating().AddHandlebars();
 
             services.AddEmail()

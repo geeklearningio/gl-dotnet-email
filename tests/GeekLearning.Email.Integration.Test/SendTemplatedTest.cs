@@ -1,14 +1,12 @@
-﻿using GeekLearning.Storage;
-using GeekLearning.Templating;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
-
-namespace GeekLearning.Email.Integration.Test
+﻿namespace GeekLearning.Email.Integration.Test
 {
+    using Microsoft.Extensions.DependencyInjection;
+    using Storage;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Templating;
+    using Xunit;
+
     [Collection(nameof(IntegrationCollection))]
     [Trait("Operation", "SendTemplated"), Trait("Kind", "Integration")]
     public class SendTemplatedTest
