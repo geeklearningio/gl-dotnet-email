@@ -36,8 +36,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="1.1.2" />
-    <PackageReference Include="GeekLearning.Storage.FileSystem" Version="0.7.0-alpha0026" />
-    <PackageReference Include="GeekLearning.Templating.Handlebars" Version="0.5.0-alpha0018" />
+    <PackageReference Include="GeekLearning.Storage.FileSystem" Version="0.7.0" />
+    <PackageReference Include="GeekLearning.Templating.Handlebars" Version="0.5.1" />
   </ItemGroup>
 
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
