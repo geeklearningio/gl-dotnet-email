@@ -43,14 +43,17 @@
             message.From.Add(new MailboxAddress(from.DisplayName, from.Email));
             foreach (var recipient in recipients)
             {
-                message.To.Add(new MailboxAddress(from.DisplayName, from.Email));
+                message.To.Add(new MailboxAddress(recipient.DisplayName, recipient.Email));
             }
 
             message.Subject = subject;
 
-            var builder = new BodyBuilder();
-            builder.TextBody = text;
-            builder.HtmlBody = html;
+            var builder = new BodyBuilder
+            {
+                TextBody = text,
+                HtmlBody = html
+            };
+
             message.Body = builder.ToMessageBody();
 
             using (var client = new SmtpClient())
