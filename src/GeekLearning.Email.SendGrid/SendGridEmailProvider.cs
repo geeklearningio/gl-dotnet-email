@@ -50,7 +50,7 @@
             }
 
             var response = await client.SendEmailAsync(message);
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            if (response.StatusCode != System.Net.HttpStatusCode.Accepted)
             {
                 throw new Exception($"Cannot Send Email: {response.StatusCode}");
             }
