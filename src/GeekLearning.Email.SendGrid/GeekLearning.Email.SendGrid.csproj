@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Sendgrid" Version="9.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GeekLearning.Email\GeekLearning.Email.csproj" />
   </ItemGroup>
 
