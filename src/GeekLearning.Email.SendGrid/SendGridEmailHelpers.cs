@@ -7,7 +7,7 @@ namespace GeekLearning.Email.SendGrid
 {
     internal static class SendGridEmailHelpers
     {
-        internal EmailAddress ToSendGridEmail(this IEmailAddress email)
+        internal static EmailAddress ToSendGridEmail(this IEmailAddress email)
         {
             return new EmailAddress(email.Email, email.DisplayName);
         }
