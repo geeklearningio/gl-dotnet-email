@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>Templated Emailing abstractions with providers.</Description>
@@ -7,13 +7,18 @@
     <TargetFramework>netstandard2</TargetFramework>
     <AssemblyName>GeekLearning.Email</AssemblyName>
     <PackageId>GeekLearning.Email</PackageId>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="GeekLearning.Storage.Azure" Version="0.7.0" />
+    <PackageReference Include="GeekLearning.Storage.FileSystem" Version="0.7.0" />
+    <PackageReference Include="GeekLearning.Templating.Handlebars" Version="0.5.1" />
+    <PackageReference Include="MailKit" Version="1.18.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="GeekLearning.Templating" Version="0.6.0-alpha0009" />
   </ItemGroup>
 
 </Project>

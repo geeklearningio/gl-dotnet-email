@@ -1,4 +1,4 @@
-﻿namespace GeekLearning.Email.InMemory
+namespace GeekLearning.Email.InMemory
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -13,7 +13,7 @@
             this.inMemoryEmailRepository = inMemoryEmailRepository;
         }
 
-        public Task SendEmailAsync(IEmailAddress from, IEnumerable<IEmailAddress> recipients, string subject, string text, string html)
+        public Task SendEmailAsync(IEmailAddress from, IEnumerable<IEmailAddress> recipients, string subject, string text, string html, MimeKit.AttachmentCollection attachments)
         {
             this.inMemoryEmailRepository.Save(new InMemoryEmail
             {
@@ -21,7 +21,7 @@
                 MessageText = text,
                 MessageHtml = html,
                 To = recipients.ToArray(),
-                From = from,
+                From = from
             });
 
             return Task.FromResult(0);

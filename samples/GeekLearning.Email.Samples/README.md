@@ -59,8 +59,7 @@ receive the email in place of the original Recipients.
     "Provider": "FileSystem",
     "Parameters": {
         "Path": "Templates"
-
-}
+    }
     }
 }
 }
@@ -74,7 +73,7 @@ services.Configure<StorageOptions>(Configuration.GetSection("Storage"));
 services.AddTemplating().AddHandlebars();
 
 services.AddEmail()
-await this.emailSender.SendTemplatedEmailAsync("Invitation", context, recipients );    .AddSmtpEmail();
+    .AddSmtpEmail();
 services.Configure<EmailOptions>(Configuration.GetSection("Email"));
 ```
 
@@ -83,11 +82,9 @@ subtemplate needed to generate subject, html and text versions. For instance, if
 define an `Invitation` template, we will write three templates :
 * Invitation-BodyHtml.hbs
 * Invitation-BodyText.hbs
-
 * Invitation-Subject.hbs
 
 *Check the sample project to see the template contents*
-
 
 Then in our classes, we can require an `IEmailSender` which will allow us to send templated
 emails.
@@ -104,10 +101,10 @@ emails.
 
         public async Task<IActionResult> SendEmail()
         {
-            List<IEmailAddress> recipients = new List<IEmailAddress>() {
-                new EmailAddress() { Email = "myfriend@aways.com", DisplayName = "Samuel", AddressAs = AddressTarget.To },
-                new EmailAddress() { Email = "rhsmith@gworld.com", DisplayName = "Bob", AddressAs = AddressTarget.Cc },
-                new EmailAddress() { Email = "igetit@world.gov", DisplayName="George Jones", AddressAs= AddressTarget.ReplyTo }
+            var user = new User
+            {
+                Email = "john@doe.me",
+                DisplayName = "John Doe"
             };
 
             var context = new
@@ -115,18 +112,8 @@ emails.
                 ApplicationName = "Email Sender Sample",
                 User = user
             };
-            
-            MimeKit.AttachmentCollection attachments = new MimeKit.AttachmentCollection
-            {
-                { "sample_attachment.txt", System.Text.Encoding.UTF8.GetBytes("This is the content of the file attachment.") }
-            };
-            
-            await this.emailSender.SendTemplatedEmailAsync("Invitation", context, recipients, attachments);
 
-            // omit attachments and send simple text message:
-            recipients.Clear();
-            recipients.Add(new EmailAddress() { Email = "myfriend@aways.com", DisplayName = "Samuel", AddressAs = AddressTarget.To });
-            await this.emailSender.SendEmailAsync(new EmailAddress(){ Email="to.somebody@domain.tld", DisplayName="Me",                                 AddressAs=AddressTarget.From }, "A simple message","This is a test message", recipients);
+            await this.emailSender.SendTemplatedEmailAsync("Invitation", context, user);
 
             return RedirectToAction("Index");
         }
