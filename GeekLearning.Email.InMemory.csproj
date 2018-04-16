@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>In Memory Provider for Geek Learning Email Abstractions.</Description>
+    <VersionPrefix>0.0.1</VersionPrefix>
+    <Authors>Geek Learning;Arnaud Auroux;Adrien Siffermann;Cyprien Autexier</Authors>
+    <TargetFramework>netstandard2</TargetFramework>
+    <AssemblyName>GeekLearning.Email.InMemory</AssemblyName>
+    <PackageId>GeekLearning.Email.InMemory</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GeekLearning.Storage.FileSystem" Version="0.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GeekLearning.Email\GeekLearning.Email.csproj" />
+  </ItemGroup>
+
+</Project>

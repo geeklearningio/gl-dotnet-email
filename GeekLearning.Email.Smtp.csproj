@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>SMTP Provider for Geek Learning Email Abstractions.</Description>
+    <VersionPrefix>0.0.1</VersionPrefix>
+    <Authors>Geek Learning;Adrien Siffermann;Cyprien Autexier</Authors>
+    <TargetFrameworks>netstandard2</TargetFrameworks>
+    <AssemblyName>GeekLearning.Email.Smtp</AssemblyName>
+    <PackageId>GeekLearning.Email.Smtp</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GeekLearning.Email\GeekLearning.Email.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GeekLearning.Storage.Azure" Version="0.7.0" />
+    <PackageReference Include="GeekLearning.Storage.FileSystem" Version="0.7.0" />
+    <PackageReference Include="GeekLearning.Templating.Handlebars" Version="0.5.1" />
+    <PackageReference Include="MailKit" Version="1.18.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.0" />
+  </ItemGroup>
+
+</Project>
