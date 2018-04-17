@@ -55,17 +55,14 @@
                 new SendGrid.SendGridEmailProviderType(),
             };
 
-            var emailSender = new Internal.EmailSender(
-                providerTypes,
-                options,
-                this.storeFixture.Services.GetRequiredService<IStorageFactory>(),
-                this.storeFixture.Services.GetRequiredService<ITemplateLoaderFactory>());
+            List<IEmailAddress> address = new List<IEmailAddress>() {
+                new Internal.EmailAddress(){
+                    DisplayName = "test user",
+                    Email = "no-reply@test.geeklearning.io",
+                    AddressAs = AddressTarget.To}
+            };
 
-            await emailSender.SendTemplatedEmailAsync("Notification1", new { }, new Internal.EmailAddress
-            {
-                DisplayName = "test user",
-                Email = "no-reply@test.geeklearning.io"
-            });
+            await emailSender.SendTemplatedEmailAsync("Notification1", new { }, address, null);
         }
     }
 }
