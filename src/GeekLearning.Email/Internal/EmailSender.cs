@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Templating;
+    using System.Text.RegularExpressions;
 
     public class EmailSender : IEmailSender
     {
@@ -43,27 +44,28 @@
             }
         }
 
-        public Task SendEmailAsync(string subject, string message, params IEmailAddress[] to)
+        public Task SendEmailAsync(string subject, string message, IEnumerable<IEmailAddress> to,  MimeKit.AttachmentCollection attachments)
         {
-            return this.SendEmailAsync(options.DefaultSender, subject, message, to);
+            return this.SendEmailAsync(options.DefaultSender, subject, message, to, attachments);
         }
 
-        public Task SendEmailAsync(IEmailAddress from, string subject, string message, params IEmailAddress[] to)
+        public Task SendEmailAsync(IEmailAddress from, string subject, string message, IEnumerable<IEmailAddress> to, MimeKit.AttachmentCollection attachments)
         {
             return DoMockupAndSendEmailAsync(
                 from,
                 to,
                 subject,
                 message,
-                string.Format("<html><header></header><body>{0}</body></html>", message));
+                string.Format("<html><header></header><body>{0}</body></html>", message), 
+                attachments);
         }
 
-        public Task SendTemplatedEmailAsync<T>(string templateKey, T context, params IEmailAddress[] to)
+        public Task SendTemplatedEmailAsync<T>(string templateKey, T context, IEnumerable<IEmailAddress> to, MimeKit.AttachmentCollection attachments)
         {
-            return this.SendTemplatedEmailAsync(options.DefaultSender, templateKey, context, to);
+            return this.SendTemplatedEmailAsync(options.DefaultSender, templateKey, context, to, attachments);
         }
 
-        public async Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, params IEmailAddress[] to)
+        public async Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, IEnumerable<IEmailAddress> to, MimeKit.AttachmentCollection attachments)
         {
             var subjectTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.Subject);
             var textTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.BodyText);
@@ -74,7 +76,8 @@
                 to,
                 subjectTemplate.Apply(context),
                 textTemplate.Apply(context),
-                htmlTemplate.Apply(context));
+                htmlTemplate.Apply(context),
+                attachments);
         }
 
         private Task<ITemplate> GetTemplateAsync(string templateKey, EmailTemplateType templateType)
@@ -87,7 +90,8 @@
             IEnumerable<IEmailAddress> recipients,
             string subject,
             string text,
-            string html)
+            string html,
+            MimeKit.AttachmentCollection attachments)
         {
             var finalRecipients = new List<IEmailAddress>();
             var mockedUpRecipients = new List<IEmailAddress>();
@@ -96,12 +100,15 @@
             {
                 foreach (var recipient in recipients)
                 {
-                    var emailParts = recipient.Email.Split('@');
-                    if (emailParts.Length != 2)
+                
+                    string trimmedEmail = recipient.Email.Trim();
+                    // not sure if it's the most friendly to validate in the sender method. Should be left to caller code, IMO 
+                    if (Regex.IsMatch(trimmedEmail, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", RegexOptions.IgnoreCase).Equals(false))
                     {
                         throw new NotSupportedException("Bad recipient email.");
                     }
 
+                    var emailParts = trimmedEmail.Split('@');
                     var domain = emailParts[1];
 
                     if (!this.options.Mockup.Exceptions.Emails.Contains(recipient.Email)
@@ -142,7 +149,7 @@
                 finalRecipients,
                 subject,
                 text,
-                html);
+                html, attachments);
         }
     }
 }
