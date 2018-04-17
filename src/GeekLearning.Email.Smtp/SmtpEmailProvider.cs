@@ -37,13 +37,29 @@
             IEnumerable<IEmailAddress> recipients,
             string subject,
             string text,
-            string html)
+            string html,
+            AttachmentCollection attachments)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(from.DisplayName, from.Email));
             foreach (var recipient in recipients)
             {
-                message.To.Add(new MailboxAddress(recipient.DisplayName, recipient.Email));
+                InternetAddress address = new MailboxAddress(recipient.DisplayName, recipient.Email);
+                switch (recipient.AddressAs)
+                {
+                    case AddressTarget.Cc:
+                        message.Cc.Add(address);
+                        break;
+                    case AddressTarget.Bcc:
+                        message.Bcc.Add(address);
+                        break;
+                    case AddressTarget.ReplyTo:
+                        message.ReplyTo.Add(address);
+                        break;
+                    default:
+                        message.To.Add(address);
+                        break;
+                }
             }
 
             message.Subject = subject;
@@ -53,6 +69,15 @@
                 TextBody = text,
                 HtmlBody = html
             };
+            
+            builder.Attachments.Clear();
+            if (attachments != null)
+            {
+                foreach (var attachment in attachments)
+                {
+                    builder.Attachments.Add(attachment);
+                }
+            }
 
             message.Body = builder.ToMessageBody();
 
