@@ -12,8 +12,14 @@
         {
             this.inMemoryEmailRepository = inMemoryEmailRepository;
         }
-
+        
+        // for compatibility: 
         public Task SendEmailAsync(IEmailAddress from, IEnumerable<IEmailAddress> recipients, string subject, string text, string html)
+        {
+            return this.SendEmailAsync(from, recipients, subject, text, html, null);
+        }
+
+        public Task SendEmailAsync(IEmailAddress from, IEnumerable<IEmailAddress> recipients, string subject, string text, string html, MimeKit.AttachmentCollection attachments)
         {
             this.inMemoryEmailRepository.Save(new InMemoryEmail
             {
