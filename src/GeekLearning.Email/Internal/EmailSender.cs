@@ -7,7 +7,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Templating;
-    using System.Text.RegularExpressions;
 
     public class EmailSender : IEmailSender
     {
@@ -44,28 +43,42 @@
             }
         }
 
-        public Task SendEmailAsync(string subject, string message, IEnumerable<IEmailAddress> to,  MimeKit.AttachmentCollection attachments)
+        public Task SendEmailAsync(string subject, string message,  MimeKit.AttachmentCollection attachments, params IEmailAddress[] to)
         {
-            return this.SendEmailAsync(options.DefaultSender, subject, message, to, attachments);
+            return this.SendEmailAsync(options.DefaultSender, subject, message, attachments, to);
         }
 
-        public Task SendEmailAsync(IEmailAddress from, string subject, string message, IEnumerable<IEmailAddress> to, MimeKit.AttachmentCollection attachments)
+        public Task SendEmailAsync(string subject, string message, params IEmailAddress[] to)
+        {
+            return this.SendEmailAsync(options.DefaultSender, subject, message, null, to);
+        }
+
+        public Task SendEmailAsync(IEmailAddress from, string subject, string message, params IEmailAddress[] to)
+        {
+            return this.SendEmailAsync(from, subject, message, null, to);
+        }
+
+        public Task SendEmailAsync(IEmailAddress from, string subject, string message, MimeKit.AttachmentCollection attachments, params IEmailAddress[] to)
         {
             return DoMockupAndSendEmailAsync(
                 from,
                 to,
                 subject,
                 message,
-                string.Format("<html><header></header><body>{0}</body></html>", message), 
-                attachments);
+                string.Format("<html><header></header><body>{0}</body></html>", message), attachments);
         }
 
-        public Task SendTemplatedEmailAsync<T>(string templateKey, T context, IEnumerable<IEmailAddress> to, MimeKit.AttachmentCollection attachments)
+        public Task SendTemplatedEmailAsync<T>(string templateKey, T context,  MimeKit.AttachmentCollection attachments, params IEmailAddress[] to)
         {
-            return this.SendTemplatedEmailAsync(options.DefaultSender, templateKey, context, to, attachments);
+            return this.SendTemplatedEmailAsync(options.DefaultSender, templateKey, context, attachments, to);
         }
 
-        public async Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, IEnumerable<IEmailAddress> to, MimeKit.AttachmentCollection attachments)
+        public Task SendTemplatedEmailAsync<T>(string templateKey, T context, params IEmailAddress[] to)
+        {
+            return this.SendTemplatedEmailAsync(options.DefaultSender, templateKey, context, to);
+        }
+
+        public async Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, params IEmailAddress[] to)
         {
             var subjectTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.Subject);
             var textTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.BodyText);
@@ -77,7 +90,24 @@
                 subjectTemplate.Apply(context),
                 textTemplate.Apply(context),
                 htmlTemplate.Apply(context),
-                attachments);
+                null
+                );
+        }
+
+        public async Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, MimeKit.AttachmentCollection attachments, params IEmailAddress[] to)
+        {
+            var subjectTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.Subject);
+            var textTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.BodyText);
+            var htmlTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.BodyHtml);
+
+            await this.DoMockupAndSendEmailAsync(
+                from,
+                to,
+                subjectTemplate.Apply(context),
+                textTemplate.Apply(context),
+                htmlTemplate.Apply(context),
+                attachments
+                );
         }
 
         private Task<ITemplate> GetTemplateAsync(string templateKey, EmailTemplateType templateType)
@@ -87,7 +117,7 @@
 
         private async Task DoMockupAndSendEmailAsync(
             IEmailAddress from,
-            IEnumerable<IEmailAddress> recipients,
+            IEmailAddress [] recipients,
             string subject,
             string text,
             string html,
@@ -100,18 +130,12 @@
             {
                 foreach (var recipient in recipients)
                 {
-                
                     string trimmedEmail = recipient.Email.Trim();
-                    // not sure if it's the most friendly to validate in the sender method. Should be left to caller code, IMO 
-                    if (Regex.IsMatch(trimmedEmail, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", RegexOptions.IgnoreCase).Equals(false))
-                    {
-                        throw new NotSupportedException("Bad recipient email.");
-                    }
-
+ 
                     var emailParts = trimmedEmail.Split('@');
                     var domain = emailParts[1];
 
-                    if (!this.options.Mockup.Exceptions.Emails.Contains(recipient.Email)
+                    if (!this.options.Mockup.Exceptions.Emails.Contains(trimmedEmail)
                         && !this.options.Mockup.Exceptions.Domains.Contains(domain))
                     {
                         if (!mockedUpRecipients.Any())
