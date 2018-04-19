@@ -1,11 +1,12 @@
 ﻿namespace GeekLearning.Email.Smtp
 {
-    using MailKit.Net.Smtp;
+   using MailKit.Net.Smtp;
     using MailKit.Security;
     using MimeKit;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Internal;
 
     public class SmtpEmailProvider : IEmailProvider
     {
@@ -45,21 +46,30 @@
             foreach (var recipient in recipients)
             {
                 InternetAddress address = new MailboxAddress(recipient.DisplayName, recipient.Email);
-                switch (recipient.AddressAs)
+                if (recipient is EmailAddressExt)
                 {
-                    case AddressTarget.Cc:
-                        message.Cc.Add(address);
-                        break;
-                    case AddressTarget.Bcc:
-                        message.Bcc.Add(address);
-                        break;
-                    case AddressTarget.ReplyTo:
-                        message.ReplyTo.Add(address);
-                        break;
-                    default:
-                        message.To.Add(address);
-                        break;
+                    var recip = recipient as Internal.EmailAddressExt;
+                    switch (recip.AddressAs)
+                    {
+                        case AddressTarget.Cc:
+                            message.Cc.Add(address);
+                            break;
+                        case AddressTarget.Bcc:
+                            message.Bcc.Add(address);
+                            break;
+                        case AddressTarget.ReplyTo:
+                            message.ReplyTo.Add(address);
+                            break;
+                        default:
+                            message.To.Add(address);
+                            break;
+                    }
                 }
+                else
+                {
+                    message.To.Add(address);
+                }
+ 
             }
 
             message.Subject = subject;
@@ -67,9 +77,8 @@
             var builder = new BodyBuilder
             {
                 TextBody = text,
-                HtmlBody = html
+                HtmlBody = html,
             };
-            
             builder.Attachments.Clear();
             if (attachments != null)
             {
@@ -78,7 +87,6 @@
                     builder.Attachments.Add(attachment);
                 }
             }
-
             message.Body = builder.ToMessageBody();
 
             using (var client = new SmtpClient())
