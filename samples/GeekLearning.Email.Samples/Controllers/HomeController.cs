@@ -22,13 +22,9 @@ namespace GeekLearning.Email.Samples.Controllers
 
         public async Task<IActionResult> SendEmail()
         {
-            // Email addresses have Email, DisplayName, and an enum: AddressTarget (To,Cc,Bcc, or ReplyTo)
-            List<IEmailAddress> recipients = new List<IEmailAddress>() {
-                new EmailAddress() { Email = "myfriend@aways.com", DisplayName = "Samuel", AddressAs = AddressTarget.To },
-                new EmailAddress() { Email = "rhsmith@gworld.com", DisplayName = "Bob", AddressAs = AddressTarget.Cc },
-                new EmailAddress() { Email = "igetit@world.gov", DisplayName="George Jones", AddressAs= AddressTarget.ReplyTo }
-            };
-
+ 
+            EmailAddress toAddress1 = new EmailAddress() { Email = "rhsmith@gworld.com", DisplayName = "Bob" };
+            EmailAddress toAddress2 = new EmailAddress() { Email = "sammy.davis@null.com", DisplayName = "Sam" };
 
             // example of how to add a simple attachment. Add images, streams, etc as byte arrays, for example:
 
@@ -37,22 +33,22 @@ namespace GeekLearning.Email.Samples.Controllers
                 { "sample_attachment.txt", System.Text.Encoding.UTF8.GetBytes("This is the content of the file attachment.") }
             };
 
-            // the Reply-To addresses are simply another list of IEmailAddress objects, here, were are ignoring them as null.
-            // Also, in the From address, the AddressAs property is ignored, and the From address is positional and always treated as the From.
-            // Likewise, a From enumeration value in the recipients list is ignored, and will be treated as a To address.
-            await this.emailSender.SendEmailAsync(new EmailAddress() { Email="to.somebody@domain.tld", DisplayName="Me", AddressAs=AddressTarget.From }, "A simple message","This is a test message", recipients, attachments);
 
 
-            // Here is a second send example. No attachments, but using templates:
+            await this.emailSender.SendEmailAsync(new EmailAddress() { Email="from.somebody@domain.tld", DisplayName="Me" }, "A simple message","This is a test message", attachments, toAddress1);
 
-            recipients.Clear();
-            recipients.Add(new EmailAddress { Email="george@alaska.edu", DisplayName="George Jones", AddressAs=AddressTarget.To });
+
+            // Here is a second send example. No attachments, but using templates. Specifies to send a Cc to ccRecipient, using a decorator:
+
+            IEmailAddress ccRecipient = new EmailAddress() { Email = "myfriend@somewhere.com", DisplayName = "Joe Smith" };
+
             var context = new
             {
                 ApplicationName = "Email Sender Sample",
-                User = recipients
+                User = toAddress1
             };
-            await this.emailSender.SendTemplatedEmailAsync("Invitation", context, recipients );
+            await this.emailSender.SendTemplatedEmailAsync("Invitation", context, toAddress2, ccRecipient.ToCc()  );
+
 
             return RedirectToAction("Index");
         }
