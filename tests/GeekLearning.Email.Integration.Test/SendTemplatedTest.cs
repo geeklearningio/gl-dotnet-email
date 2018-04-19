@@ -55,14 +55,12 @@
                 new SendGrid.SendGridEmailProviderType(),
             };
 
-            List<IEmailAddress> address = new List<IEmailAddress>() {
-                new Internal.EmailAddress(){
+            IEmailAddress address = new Internal.EmailAddress() {
                     DisplayName = "test user",
-                    Email = "no-reply@test.geeklearning.io",
-                    AddressAs = AddressTarget.To}
+                    Email = "no-reply@test.geeklearning.io"
             };
 
-            await emailSender.SendTemplatedEmailAsync("Notification1", new { }, address, null);
+            await emailSender.SendTemplatedEmailAsync("Notification1", new { }, address);
         }
     }
 }
