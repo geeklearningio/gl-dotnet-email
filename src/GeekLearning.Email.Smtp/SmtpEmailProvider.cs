@@ -5,6 +5,7 @@
     using MimeKit;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public class SmtpEmailProvider : IEmailProvider
@@ -55,6 +56,11 @@
             };
 
             message.Body = builder.ToMessageBody();
+
+            foreach (var textBodyPart in message.BodyParts.OfType<TextPart>())
+            {
+                textBodyPart.ContentTransferEncoding = ContentEncoding.Base64;
+            }
 
             using (var client = new SmtpClient())
             {

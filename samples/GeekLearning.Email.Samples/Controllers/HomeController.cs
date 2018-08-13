@@ -39,6 +39,26 @@ namespace GeekLearning.Email.Samples.Controllers
             return RedirectToAction("Index");
         }
 
+        [Route("send-chars")]
+        public async Task<IActionResult> SendSpecialCharactersEmail()
+        {
+            var user = new User
+            {
+                Email = "john@doe.me",
+                DisplayName = "John Doe"
+            };
+
+            var context = new
+            {
+                ApplicationName = "Email Sender Sample",
+                User = user
+            };
+
+            await this.emailSender.SendTemplatedEmailAsync("SpecialChar", context, user);
+
+            return RedirectToAction("Index");
+        }
+
         public IActionResult Error()
         {
             return View();
