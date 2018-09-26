@@ -33,12 +33,23 @@
             this.password = options.Parameters["Password"];
         }
 
-        public async Task SendEmailAsync(
+        public Task SendEmailAsync(
             IEmailAddress from,
             IEnumerable<IEmailAddress> recipients,
             string subject,
             string text,
             string html)
+        {
+            return SendEmailAsync(from, recipients, subject, text, html, Enumerable.Empty<IEmailAttachment>());
+        }
+
+        public async Task SendEmailAsync(
+            IEmailAddress from,
+            IEnumerable<IEmailAddress> recipients,
+            string subject,
+            string text,
+            string html,
+            IEnumerable<IEmailAttachment> attachments)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(from.DisplayName, from.Email));
@@ -55,6 +66,11 @@
                 HtmlBody = html
             };
 
+            foreach (var attachment in attachments)
+            {
+                builder.Attachments.Add(attachment.FileName, attachment.Data, new ContentType(attachment.MediaType, attachment.MediaSubtype));
+            }
+
             message.Body = builder.ToMessageBody();
 
             foreach (var textBodyPart in message.BodyParts.OfType<TextPart>())
@@ -67,7 +83,7 @@
                 await client.ConnectAsync(this.host, this.port, SecureSocketOptions.None);
 
                 client.AuthenticationMechanisms.Remove("XOAUTH2");
-                
+
                 if (!string.IsNullOrWhiteSpace(this.username))
                 {
                     await client.AuthenticateAsync(this.username, this.password);

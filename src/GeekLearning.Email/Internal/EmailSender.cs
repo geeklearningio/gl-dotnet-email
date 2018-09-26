@@ -47,15 +47,20 @@
         {
             return this.SendEmailAsync(options.DefaultSender, subject, message, to);
         }
-
         public Task SendEmailAsync(IEmailAddress from, string subject, string message, params IEmailAddress[] to)
+        {
+            return this.SendEmailAsync(options.DefaultSender, subject, message, Enumerable.Empty<IEmailAttachment>(), to);
+        }
+
+        public Task SendEmailAsync(IEmailAddress from, string subject, string message, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to)
         {
             return DoMockupAndSendEmailAsync(
                 from,
                 to,
                 subject,
                 message,
-                string.Format("<html><header></header><body>{0}</body></html>", message));
+                string.Format("<html><header></header><body>{0}</body></html>", message),
+                attachments);
         }
 
         public Task SendTemplatedEmailAsync<T>(string templateKey, T context, params IEmailAddress[] to)
@@ -63,7 +68,12 @@
             return this.SendTemplatedEmailAsync(options.DefaultSender, templateKey, context, to);
         }
 
-        public async Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, params IEmailAddress[] to)
+        public Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, params IEmailAddress[] to)
+        {
+            return this.SendTemplatedEmailAsync(options.DefaultSender, templateKey, context, Enumerable.Empty<IEmailAttachment>(), to);
+        }
+
+        public async Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to)
         {
             var subjectTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.Subject);
             var textTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.BodyText);
@@ -74,7 +84,8 @@
                 to,
                 subjectTemplate.Apply(context),
                 textTemplate.Apply(context),
-                htmlTemplate.Apply(context));
+                htmlTemplate.Apply(context),
+                attachments);
         }
 
         private Task<ITemplate> GetTemplateAsync(string templateKey, EmailTemplateType templateType)
@@ -87,7 +98,8 @@
             IEnumerable<IEmailAddress> recipients,
             string subject,
             string text,
-            string html)
+            string html,
+            IEnumerable<IEmailAttachment> attachments)
         {
             var finalRecipients = new List<IEmailAddress>();
             var mockedUpRecipients = new List<IEmailAddress>();
@@ -142,7 +154,8 @@
                 finalRecipients,
                 subject,
                 text,
-                html);
+                html,
+                attachments);
         }
     }
 }

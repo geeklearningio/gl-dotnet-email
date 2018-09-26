@@ -2,11 +2,9 @@
 {
     using global::SendGrid;
     using global::SendGrid.Helpers.Mail;
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Net.Http;
     using System.Threading.Tasks;
 
     public class SendGridEmailProvider : IEmailProvider
@@ -23,14 +21,23 @@
             }
         }
 
-        public async Task SendEmailAsync(
+        public Task SendEmailAsync(
             IEmailAddress from,
             IEnumerable<IEmailAddress> recipients,
             string subject,
             string text,
             string html)
         {
+            return SendEmailAsync(from, recipients, subject, text, html, Enumerable.Empty<IEmailAttachment>());
+        }
 
+        public async Task SendEmailAsync(IEmailAddress from,
+            IEnumerable<IEmailAddress> recipients,
+            string subject,
+            string text,
+            string html,
+            IEnumerable<IEmailAttachment> attachments)
+        {
             var client = new SendGridClient(this.apiKey);
 
             SendGridMessage message;
@@ -47,6 +54,16 @@
                     subject,
                     text,
                     html);
+            }
+
+            if (attachments.Any())
+            {
+                message.AddAttachments(attachments.Select(a => new Attachment
+                {
+                    Filename = a.FileName,
+                    Type = a.ContentType,
+                    Content = Convert.ToBase64String(a.Data)
+                }).ToList());
             }
 
             var response = await client.SendEmailAsync(message);
