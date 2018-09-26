@@ -1,4 +1,4 @@
-﻿namespace GeekLearning.Email
+namespace GeekLearning.Email
 {
     public interface IEmailAddress
     {

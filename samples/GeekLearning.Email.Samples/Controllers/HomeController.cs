@@ -22,19 +22,33 @@ namespace GeekLearning.Email.Samples.Controllers
 
         public async Task<IActionResult> SendEmail()
         {
-            var user = new User
+ 
+            EmailAddress toAddress1 = new EmailAddress() { Email = "rhsmith@gworld.com", DisplayName = "Bob" };
+            EmailAddress toAddress2 = new EmailAddress() { Email = "sammy.davis@null.com", DisplayName = "Sam" };
+
+            // example of how to add a simple attachment. Add images, streams, etc as byte arrays, for example:
+
+            MimeKit.AttachmentCollection attachments = new MimeKit.AttachmentCollection
             {
-                Email = "john@doe.me",
-                DisplayName = "John Doe"
+                { "sample_attachment.txt", System.Text.Encoding.UTF8.GetBytes("This is the content of the file attachment.") }
             };
+
+
+
+            await this.emailSender.SendEmailAsync(new EmailAddress() { Email="from.somebody@domain.tld", DisplayName="Me" }, "A simple message","This is a test message", attachments, toAddress1);
+
+
+            // Here is a second send example. No attachments, but using templates. Specifies to send a Cc to ccRecipient, using a decorator:
+
+            IEmailAddress ccRecipient = new EmailAddress() { Email = "myfriend@somewhere.com", DisplayName = "Joe Smith" };
 
             var context = new
             {
                 ApplicationName = "Email Sender Sample",
-                User = user
+                User = toAddress1
             };
+            await this.emailSender.SendTemplatedEmailAsync("Invitation", context, toAddress2, ccRecipient.ToCc()  );
 
-            await this.emailSender.SendTemplatedEmailAsync("Invitation", context, user);
 
             return RedirectToAction("Index");
         }

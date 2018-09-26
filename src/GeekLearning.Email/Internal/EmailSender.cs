@@ -43,19 +43,34 @@
             }
         }
 
+        public Task SendEmailAsync(string subject, string message,  MimeKit.AttachmentCollection attachments, params IEmailAddress[] to)
+        {
+            return this.SendEmailAsync(options.DefaultSender, subject, message, attachments, to);
+        }
+
         public Task SendEmailAsync(string subject, string message, params IEmailAddress[] to)
         {
-            return this.SendEmailAsync(options.DefaultSender, subject, message, to);
+            return this.SendEmailAsync(options.DefaultSender, subject, message, null, to);
         }
 
         public Task SendEmailAsync(IEmailAddress from, string subject, string message, params IEmailAddress[] to)
+        {
+            return this.SendEmailAsync(from, subject, message, null, to);
+        }
+
+        public Task SendEmailAsync(IEmailAddress from, string subject, string message, MimeKit.AttachmentCollection attachments, params IEmailAddress[] to)
         {
             return DoMockupAndSendEmailAsync(
                 from,
                 to,
                 subject,
                 message,
-                string.Format("<html><header></header><body>{0}</body></html>", message));
+                string.Format("<html><header></header><body>{0}</body></html>", message), attachments);
+        }
+
+        public Task SendTemplatedEmailAsync<T>(string templateKey, T context,  MimeKit.AttachmentCollection attachments, params IEmailAddress[] to)
+        {
+            return this.SendTemplatedEmailAsync(options.DefaultSender, templateKey, context, attachments, to);
         }
 
         public Task SendTemplatedEmailAsync<T>(string templateKey, T context, params IEmailAddress[] to)
@@ -74,7 +89,25 @@
                 to,
                 subjectTemplate.Apply(context),
                 textTemplate.Apply(context),
-                htmlTemplate.Apply(context));
+                htmlTemplate.Apply(context),
+                null
+                );
+        }
+
+        public async Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, MimeKit.AttachmentCollection attachments, params IEmailAddress[] to)
+        {
+            var subjectTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.Subject);
+            var textTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.BodyText);
+            var htmlTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.BodyHtml);
+
+            await this.DoMockupAndSendEmailAsync(
+                from,
+                to,
+                subjectTemplate.Apply(context),
+                textTemplate.Apply(context),
+                htmlTemplate.Apply(context),
+                attachments
+                );
         }
 
         private Task<ITemplate> GetTemplateAsync(string templateKey, EmailTemplateType templateType)
@@ -84,10 +117,11 @@
 
         private async Task DoMockupAndSendEmailAsync(
             IEmailAddress from,
-            IEnumerable<IEmailAddress> recipients,
+            IEmailAddress [] recipients,
             string subject,
             string text,
-            string html)
+            string html,
+            MimeKit.AttachmentCollection attachments)
         {
             var finalRecipients = new List<IEmailAddress>();
             var mockedUpRecipients = new List<IEmailAddress>();
@@ -96,15 +130,12 @@
             {
                 foreach (var recipient in recipients)
                 {
-                    var emailParts = recipient.Email.Split('@');
-                    if (emailParts.Length != 2)
-                    {
-                        throw new NotSupportedException("Bad recipient email.");
-                    }
-
+                    string trimmedEmail = recipient.Email.Trim();
+ 
+                    var emailParts = trimmedEmail.Split('@');
                     var domain = emailParts[1];
 
-                    if (!this.options.Mockup.Exceptions.Emails.Contains(recipient.Email)
+                    if (!this.options.Mockup.Exceptions.Emails.Contains(trimmedEmail)
                         && !this.options.Mockup.Exceptions.Domains.Contains(domain))
                     {
                         if (!mockedUpRecipients.Any())
@@ -142,7 +173,7 @@
                 finalRecipients,
                 subject,
                 text,
-                html);
+                html, attachments);
         }
     }
 }

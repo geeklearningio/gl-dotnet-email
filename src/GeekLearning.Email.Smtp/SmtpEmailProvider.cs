@@ -1,12 +1,13 @@
 ﻿namespace GeekLearning.Email.Smtp
 {
-    using MailKit.Net.Smtp;
+   using MailKit.Net.Smtp;
     using MailKit.Security;
     using MimeKit;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Internal;
 
     public class SmtpEmailProvider : IEmailProvider
     {
@@ -38,13 +39,38 @@
             IEnumerable<IEmailAddress> recipients,
             string subject,
             string text,
-            string html)
+            string html,
+            AttachmentCollection attachments)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(from.DisplayName, from.Email));
             foreach (var recipient in recipients)
             {
-                message.To.Add(new MailboxAddress(recipient.DisplayName, recipient.Email));
+                InternetAddress address = new MailboxAddress(recipient.DisplayName, recipient.Email);
+                if (recipient is EmailAddressExt)
+                {
+                    var recip = recipient as Internal.EmailAddressExt;
+                    switch (recip.AddressAs)
+                    {
+                        case AddressTarget.Cc:
+                            message.Cc.Add(address);
+                            break;
+                        case AddressTarget.Bcc:
+                            message.Bcc.Add(address);
+                            break;
+                        case AddressTarget.ReplyTo:
+                            message.ReplyTo.Add(address);
+                            break;
+                        default:
+                            message.To.Add(address);
+                            break;
+                    }
+                }
+                else
+                {
+                    message.To.Add(address);
+                }
+ 
             }
 
             message.Subject = subject;
@@ -52,9 +78,16 @@
             var builder = new BodyBuilder
             {
                 TextBody = text,
-                HtmlBody = html
+                HtmlBody = html,
             };
-
+            builder.Attachments.Clear();
+            if (attachments != null)
+            {
+                foreach (var attachment in attachments)
+                {
+                    builder.Attachments.Add(attachment);
+                }
+            }
             message.Body = builder.ToMessageBody();
 
             foreach (var textBodyPart in message.BodyParts.OfType<TextPart>())

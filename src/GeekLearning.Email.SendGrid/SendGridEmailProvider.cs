@@ -28,7 +28,8 @@
             IEnumerable<IEmailAddress> recipients,
             string subject,
             string text,
-            string html)
+            string html,
+            MimeKit.AttachmentCollection attachments)
         {
 
             var client = new SendGridClient(this.apiKey);
