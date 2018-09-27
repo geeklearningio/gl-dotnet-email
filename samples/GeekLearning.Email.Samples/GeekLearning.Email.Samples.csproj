@@ -38,6 +38,15 @@
     <PackageReference Include="GeekLearning.Templating.Handlebars" Version="0.6.0-alpha0009" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Files\beach.jpeg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\sample.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <Exec Command="npm install" />
     <Exec Command="bower install" />
