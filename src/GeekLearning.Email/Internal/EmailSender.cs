@@ -54,13 +54,20 @@
 
         public Task SendEmailAsync(IEmailAddress from, string subject, string message, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to)
         {
+            return this.SendEmailAsync(from, subject, message, attachments, to.ToArray(), new IEmailAddress[0], new IEmailAddress[0]);
+        }
+
+        public Task SendEmailAsync(IEmailAddress from, string subject, string message, IEnumerable<IEmailAttachment> attachments, IEmailAddress[] to, IEmailAddress[] cc, IEmailAddress[] bcc)
+        {
             return DoMockupAndSendEmailAsync(
-                from,
-                to,
-                subject,
-                message,
-                string.Format("<html><header></header><body>{0}</body></html>", message),
-                attachments);
+              from,
+              to,
+              cc,
+              bcc,
+              subject,
+              message,
+              string.Format("<html><header></header><body>{0}</body></html>", message),
+              attachments);
         }
 
         public Task SendTemplatedEmailAsync<T>(string templateKey, T context, params IEmailAddress[] to)
@@ -70,41 +77,20 @@
 
         public Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, params IEmailAddress[] to)
         {
-            return this.SendTemplatedEmailAsync(options.DefaultSender, templateKey, context, Enumerable.Empty<IEmailAttachment>(), to);
+            return this.SendTemplatedEmailAsync(from, templateKey, context, Enumerable.Empty<IEmailAttachment>(), to);
         }
 
-        public async Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to)
+
+        public Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to)
         {
-            var subjectTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.Subject);
-            var textTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.BodyText);
-            var htmlTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.BodyHtml);
+            return this.SendTemplatedEmailAsync(from, templateKey, context, attachments, to, new IEmailAddress[0], new IEmailAddress[0]);
 
-            await this.DoMockupAndSendEmailAsync(
-                from,
-                to,
-                subjectTemplate.Apply(context),
-                textTemplate.Apply(context),
-                htmlTemplate.Apply(context),
-                attachments);
         }
 
-        private Task<ITemplate> GetTemplateAsync(string templateKey, EmailTemplateType templateType)
-        {
-            return this.templateLoader.GetTemplate($"{templateKey}-{templateType}");
-        }
-
-        private async Task DoMockupAndSendEmailAsync(
-            IEmailAddress from,
-            IEnumerable<IEmailAddress> recipients,
-            string subject,
-            string text,
-            string html,
-            IEnumerable<IEmailAttachment> attachments)
+        private IEnumerable<IEmailAddress> MockupRecipients(IEnumerable<IEmailAddress> recipients, ICollection<IEmailAddress> alreadyMockedUpRecipients)
         {
             var finalRecipients = new List<IEmailAddress>();
-            var mockedUpRecipients = new List<IEmailAddress>();
-
-            if (options.Mockup.Recipients.Any() && !string.IsNullOrEmpty(options.Mockup.Recipients.First()))
+            if (this.options.Mockup.Recipients.Any() && !string.IsNullOrEmpty(this.options.Mockup.Recipients.First()))
             {
                 foreach (var recipient in recipients)
                 {
@@ -119,15 +105,17 @@
                     if (!this.options.Mockup.Exceptions.Emails.Contains(recipient.Email)
                         && !this.options.Mockup.Exceptions.Domains.Contains(domain))
                     {
-                        if (!mockedUpRecipients.Any())
+                        if (!alreadyMockedUpRecipients.Any())
                         {
                             foreach (var mockupRecipient in this.options.Mockup.Recipients)
                             {
                                 finalRecipients.Add(new EmailAddress(mockupRecipient, "Mockup Recipient"));
                             }
                         }
-
-                        mockedUpRecipients.Add(recipient);
+                        if (!alreadyMockedUpRecipients.Any(a => a.DisplayName == recipient.DisplayName && a.Email == recipient.Email))
+                        {
+                            alreadyMockedUpRecipients.Add(recipient);
+                        }
                     }
                     else
                     {
@@ -139,6 +127,46 @@
             {
                 finalRecipients = recipients.ToList();
             }
+            return finalRecipients;
+        }
+
+        public async Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, IEnumerable<IEmailAttachment> attachments, IEmailAddress[] to, IEmailAddress[] cc, IEmailAddress[] bcc)
+        {
+            var subjectTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.Subject);
+            var textTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.BodyText);
+            var htmlTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.BodyHtml);
+          
+            await this.DoMockupAndSendEmailAsync(
+                from,
+                to,
+                cc,
+                bcc,
+                subjectTemplate.Apply(context),
+                textTemplate.Apply(context),
+                htmlTemplate.Apply(context),
+                attachments);
+        }
+
+        protected Task<ITemplate> GetTemplateAsync(string templateKey, EmailTemplateType templateType)
+        {
+            return this.templateLoader.GetTemplate($"{templateKey}-{templateType}");
+        }
+
+        private async Task DoMockupAndSendEmailAsync(
+            IEmailAddress from,
+            IEnumerable<IEmailAddress> recipients,
+            IEnumerable<IEmailAddress> ccRecipients,
+            IEnumerable<IEmailAddress> bccRecipients,
+            string subject,
+            string text,
+            string html,
+            IEnumerable<IEmailAttachment> attachments)
+        {
+            var mockedUpRecipients = new List<IEmailAddress>();
+
+            var finalToRecipients = MockupRecipients(recipients, mockedUpRecipients);
+            var finalCcRecipients = MockupRecipients(ccRecipients, mockedUpRecipients);
+            var finalBccRecipients = MockupRecipients(bccRecipients, mockedUpRecipients);
 
             if (mockedUpRecipients.Any())
             {
@@ -151,7 +179,9 @@
 
             await this.provider.SendEmailAsync(
                 from,
-                finalRecipients,
+                finalToRecipients,
+                finalCcRecipients, 
+                finalBccRecipients,
                 subject,
                 text,
                 html,

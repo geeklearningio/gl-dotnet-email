@@ -31,13 +31,27 @@
             return SendEmailAsync(from, recipients, subject, text, html, Enumerable.Empty<IEmailAttachment>());
         }
 
-        public async Task SendEmailAsync(IEmailAddress from,
+        public  Task SendEmailAsync(IEmailAddress from,
             IEnumerable<IEmailAddress> recipients,
             string subject,
             string text,
             string html,
             IEnumerable<IEmailAttachment> attachments)
         {
+            return SendEmailAsync(from, recipients, Enumerable.Empty<IEmailAddress>(), Enumerable.Empty<IEmailAddress>(), subject, text, html, Enumerable.Empty<IEmailAttachment>());
+        }
+
+        public async Task SendEmailAsync(IEmailAddress from, IEnumerable<IEmailAddress> recipients, IEnumerable<IEmailAddress> ccRecipients, IEnumerable<IEmailAddress> bccRecipients, string subject, string text, string html, IEnumerable<IEmailAttachment> attachments)
+        {
+            var allRecipients = new List<IEmailAddress>(recipients);
+            allRecipients.AddRange(ccRecipients);
+            allRecipients.AddRange(bccRecipients);
+
+            if(allRecipients.GroupBy(r => r.Email).Count() < allRecipients.Count)
+            {
+                throw new ArgumentException("Each email address in the personalization block should be unique between to, cc, and bcc. We found duplicates.");
+            }
+
             var client = new SendGridClient(this.apiKey);
 
             SendGridMessage message;
@@ -54,6 +68,16 @@
                     subject,
                     text,
                     html);
+            }
+
+            foreach (var ccRecipient in ccRecipients)
+            {
+                message.AddCc(ccRecipient.Email, ccRecipient.DisplayName);
+            }
+
+            foreach (var bccRecipient in bccRecipients)
+            {
+                message.AddBcc(bccRecipient.Email, bccRecipient.DisplayName);
             }
 
             if (attachments.Any())

@@ -3,6 +3,7 @@
     using GeekLearning.Email.Internal;
     using Microsoft.Extensions.DependencyInjection;
     using Storage;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -10,20 +11,20 @@
     using Xunit;
 
     [Collection(nameof(IntegrationCollection))]
-    [Trait("Operation", "SendTemplated"), Trait("Kind", "Integration")]
-    public class SendTemplatedTest
+    [Trait("Operation", "SendSimpleEmail"), Trait("Kind", "Integration")]
+    public class SendSimpleEmailTest
     {
         readonly StoresFixture storeFixture;
 
-        public SendTemplatedTest(StoresFixture fixture)
+        public SendSimpleEmailTest(StoresFixture fixture)
         {
             this.storeFixture = fixture;
         }
 
-        [Theory(DisplayName = nameof(SendNotification1)), InlineData("azure"), InlineData("filesystem")]
-        public async Task SendNotification1(string storeName)
+        [Fact(DisplayName = nameof(Send))]
+        public async Task Send()
         {
-            var options = Datas.GetOptions(storeFixture, storeName);
+            var options = Datas.GetOptions(storeFixture);
 
             var providerTypes = new List<IEmailProviderType>
             {
@@ -36,17 +37,17 @@
                 this.storeFixture.Services.GetRequiredService<IStorageFactory>(),
                 this.storeFixture.Services.GetRequiredService<ITemplateLoaderFactory>());
 
-            await emailSender.SendTemplatedEmailAsync("Notification1", new { }, new Internal.EmailAddress
+            await emailSender.SendEmailAsync("Simple mail", "Hello, it's a simple mail", new Internal.EmailAddress
             {
                 DisplayName = "test user",
-                Email = Datas.FirstRecipient
+                Email = "annayafi@gmail.com"
             });
         }
 
-        [Theory(DisplayName = nameof(SendNotificationWithWithCC)), InlineData("filesystem"), InlineData("azure")]
-        public async Task SendNotificationWithWithCC(string storeName)
+        [Fact(DisplayName = nameof(SendWithCC))]
+        public async Task SendWithCC()
         {
-            var options = Datas.GetOptions(storeFixture, storeName);
+            var options = Datas.GetOptions(storeFixture);
 
             var providerTypes = new List<IEmailProviderType>
             {
@@ -60,11 +61,12 @@
                 this.storeFixture.Services.GetRequiredService<ITemplateLoaderFactory>());
 
 
-            await emailSender.SendTemplatedEmailAsync(new Internal.EmailAddress
+            await emailSender.SendEmailAsync(new Internal.EmailAddress
             {
                 DisplayName = "Sender user test cc",
                 Email = "no-reply@test.geeklearning.io"
-            }, "Notification1", new { },
+            },
+            "Cc test", "Hello, this is an email with cc recipients",
             Enumerable.Empty<IEmailAttachment>(),
             new Internal.EmailAddress
             {
@@ -79,10 +81,10 @@
             new IEmailAddress[0]);
         }
 
-        [Theory(DisplayName = nameof(SendNotificationWithWithBbc)), InlineData("filesystem"), InlineData("azure")]
-        public async Task SendNotificationWithWithBbc(string storeName)
+        [Fact(DisplayName = nameof(SendWithBcc))]
+        public async Task SendWithBcc()
         {
-            var options = Datas.GetOptions(storeFixture, storeName);
+            var options = Datas.GetOptions(storeFixture);
 
             var providerTypes = new List<IEmailProviderType>
             {
@@ -96,11 +98,12 @@
                 this.storeFixture.Services.GetRequiredService<ITemplateLoaderFactory>());
 
 
-            await emailSender.SendTemplatedEmailAsync(new Internal.EmailAddress
+            await emailSender.SendEmailAsync(new Internal.EmailAddress
             {
-                DisplayName = "Sender user test cc",
+                DisplayName = "Sender user test bcc",
                 Email = "no-reply@test.geeklearning.io"
-            }, "Notification1", new { },
+            },
+            "Bcc test", "Hello, this is an email with bcc recipients",
             Enumerable.Empty<IEmailAttachment>(),
             new Internal.EmailAddress
             {
@@ -115,10 +118,10 @@
             }.Yield());
         }
 
-        [Theory(DisplayName = nameof(SendNotificationWithAttachments)), InlineData("filesystem"), InlineData("azure")]
-        public async Task SendNotificationWithAttachments(string storeName)
+        [Fact(DisplayName = nameof(SendWithAttachments))]
+        public async Task SendWithAttachments()
         {
-            var options = Datas.GetOptions(storeFixture, storeName);
+            var options = Datas.GetOptions(storeFixture);
 
             var providerTypes = new List<IEmailProviderType>
             {
@@ -137,15 +140,52 @@
             data = System.IO.File.ReadAllBytes(@"Files\sample.pdf");
             var pdf = new EmailAttachment("Sample.pdf", data, "application", "pdf");
 
-            await emailSender.SendTemplatedEmailAsync(new Internal.EmailAddress
+            await emailSender.SendEmailAsync(new Internal.EmailAddress
             {
                 DisplayName = "test user attachm ments",
                 Email = "no-reply@test.geeklearning.io"
-            }, "Notification1", new { }, new List<IEmailAttachment> { image, pdf }, new Internal.EmailAddress
+            }, "Test mail with attachments", "Hello, this is an email with attachments", new List<IEmailAttachment> { image, pdf }, new Internal.EmailAddress
             {
                 DisplayName = "test user",
                 Email = Datas.FirstRecipient
             });
+        }
+
+        [Fact(DisplayName = nameof(ErrorSendWithCCDuplicates))]
+        public async Task ErrorSendWithCCDuplicates()
+        {
+            var options = Datas.GetOptions(storeFixture);
+
+            var providerTypes = new List<IEmailProviderType>
+            {
+                new SendGrid.SendGridEmailProviderType(),
+            };
+
+            var emailSender = new Internal.EmailSender(
+                providerTypes,
+                options,
+                this.storeFixture.Services.GetRequiredService<IStorageFactory>(),
+                this.storeFixture.Services.GetRequiredService<ITemplateLoaderFactory>());
+
+            await Assert.ThrowsAsync<ArgumentException>(() =>
+                 emailSender.SendEmailAsync(new Internal.EmailAddress
+                 {
+                     DisplayName = "Sender user test cc",
+                     Email = "no-reply@test.geeklearning.io"
+                 },
+                "Cc test", "Hello, this is an email with cc recipients",
+                Enumerable.Empty<IEmailAttachment>(),
+                new Internal.EmailAddress
+                {
+                    DisplayName = "recipient user",
+                    Email = Datas.SecondRecipient
+                }.Yield(),
+                new Internal.EmailAddress
+                {
+                    DisplayName = "cc user",
+                    Email = Datas.SecondRecipient
+                }.Yield(),
+                new IEmailAddress[0]));
         }
     }
 }
