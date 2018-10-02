@@ -49,7 +49,7 @@
 
             if(allRecipients.GroupBy(r => r.Email).Count() < allRecipients.Count)
             {
-                throw new ArgumentException("Each email address in the personalization block should be unique between to, cc, and bcc. We found duplicates.");
+                throw new ArgumentException("Each email address should be unique between to, cc, and bcc recipients. We found duplicates.");
             }
 
             var client = new SendGridClient(this.apiKey);
