@@ -4,9 +4,10 @@
     using System.Collections.Generic;
     public class Datas
     {
-        public const string FirstRecipient = "annayafi@gmail.com";
-        public const string SecondRecipient = "anna_yafi@gmail.com";
-        public const string ThirdRecipient = "nomorecries@gmail.com";
+        public const string FirstRecipient = "no-reply@test.geeklearning.io";
+        public const string SecondRecipient = "no-reply2@test.geeklearning.io";
+        public const string ThirdRecipient = "no-reply3@test.geeklearning.io";
+
         public static IOptions<EmailOptions> GetOptions(StoresFixture storeFixture, string storeName = null)
         {
             return Microsoft.Extensions.Options.Options.Create(new EmailOptions
