@@ -47,6 +47,7 @@
         {
             return this.SendEmailAsync(options.DefaultSender, subject, message, to);
         }
+
         public Task SendEmailAsync(IEmailAddress from, string subject, string message, params IEmailAddress[] to)
         {
             return this.SendEmailAsync(options.DefaultSender, subject, message, Enumerable.Empty<IEmailAttachment>(), to);
@@ -80,14 +81,34 @@
             return this.SendTemplatedEmailAsync(from, templateKey, context, Enumerable.Empty<IEmailAttachment>(), to);
         }
 
-
         public Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to)
         {
             return this.SendTemplatedEmailAsync(from, templateKey, context, attachments, to, new IEmailAddress[0], new IEmailAddress[0]);
-
         }
 
-        private IEnumerable<IEmailAddress> MockupRecipients(IEnumerable<IEmailAddress> recipients, ICollection<IEmailAddress> alreadyMockedUpRecipients)
+        public async Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, IEnumerable<IEmailAttachment> attachments, IEmailAddress[] to, IEmailAddress[] cc, IEmailAddress[] bcc)
+        {
+            var subjectTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.Subject);
+            var textTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.BodyText);
+            var htmlTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.BodyHtml);
+          
+            await this.DoMockupAndSendEmailAsync(
+                from,
+                to,
+                cc,
+                bcc,
+                subjectTemplate.Apply(context),
+                textTemplate.Apply(context),
+                htmlTemplate.Apply(context),
+                attachments);
+        }
+
+        protected virtual Task<ITemplate> GetTemplateAsync(string templateKey, EmailTemplateType templateType)
+        {
+            return this.templateLoader.GetTemplate($"{templateKey}-{templateType}");
+        }
+
+        private IEnumerable<IEmailAddress> MockRecipients(IEnumerable<IEmailAddress> recipients, ICollection<IEmailAddress> alreadyMockedUpRecipients)
         {
             var finalRecipients = new List<IEmailAddress>();
             if (this.options.Mockup.Recipients.Any() && !string.IsNullOrEmpty(this.options.Mockup.Recipients.First()))
@@ -130,28 +151,6 @@
             return finalRecipients;
         }
 
-        public async Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, IEnumerable<IEmailAttachment> attachments, IEmailAddress[] to, IEmailAddress[] cc, IEmailAddress[] bcc)
-        {
-            var subjectTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.Subject);
-            var textTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.BodyText);
-            var htmlTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.BodyHtml);
-          
-            await this.DoMockupAndSendEmailAsync(
-                from,
-                to,
-                cc,
-                bcc,
-                subjectTemplate.Apply(context),
-                textTemplate.Apply(context),
-                htmlTemplate.Apply(context),
-                attachments);
-        }
-
-        protected Task<ITemplate> GetTemplateAsync(string templateKey, EmailTemplateType templateType)
-        {
-            return this.templateLoader.GetTemplate($"{templateKey}-{templateType}");
-        }
-
         private async Task DoMockupAndSendEmailAsync(
             IEmailAddress from,
             IEnumerable<IEmailAddress> recipients,
@@ -164,9 +163,9 @@
         {
             var mockedUpRecipients = new List<IEmailAddress>();
 
-            var finalToRecipients = MockupRecipients(recipients, mockedUpRecipients);
-            var finalCcRecipients = MockupRecipients(ccRecipients, mockedUpRecipients);
-            var finalBccRecipients = MockupRecipients(bccRecipients, mockedUpRecipients);
+            var finalToRecipients = MockRecipients(recipients, mockedUpRecipients);
+            var finalCcRecipients = MockRecipients(ccRecipients, mockedUpRecipients);
+            var finalBccRecipients = MockRecipients(bccRecipients, mockedUpRecipients);
 
             if (mockedUpRecipients.Any())
             {

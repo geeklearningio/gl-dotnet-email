@@ -30,6 +30,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeekLearning.Email.InMemory
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeekLearning.Email.Smtp", "src\GeekLearning.Email.Smtp\GeekLearning.Email.Smtp.csproj", "{707CA417-5EED-467A-A449-73A606089835}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekLearning.Email.Unit.Test", "GeekLearning.Email.Unit.Test\GeekLearning.Email.Unit.Test.csproj", "{DEC2C13C-FB32-424E-92AA-404709D4FB17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,10 @@ Global
 		{707CA417-5EED-467A-A449-73A606089835}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{707CA417-5EED-467A-A449-73A606089835}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{707CA417-5EED-467A-A449-73A606089835}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEC2C13C-FB32-424E-92AA-404709D4FB17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEC2C13C-FB32-424E-92AA-404709D4FB17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEC2C13C-FB32-424E-92AA-404709D4FB17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEC2C13C-FB32-424E-92AA-404709D4FB17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,5 +77,9 @@ Global
 		{8701FCC7-0420-4E57-9FD5-5B3943FD255E} = {01E85AC0-EFEF-4564-9EE9-9A124776B72E}
 		{8C83A791-0A38-4E42-8261-3614B336737E} = {01E85AC0-EFEF-4564-9EE9-9A124776B72E}
 		{707CA417-5EED-467A-A449-73A606089835} = {01E85AC0-EFEF-4564-9EE9-9A124776B72E}
+		{DEC2C13C-FB32-424E-92AA-404709D4FB17} = {8DF5B138-1052-4991-88EF-FF23AE1DCC34}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AD78B963-AC6B-4921-8160-0CA909F7D37C}
 	EndGlobalSection
 EndGlobal
