@@ -12,6 +12,10 @@ namespace GeekLearning.Email.InMemory
 
         public IEmailAddress[] To { get; set; }
 
+        public IEmailAddress[] Cc { get; set; }
+
+        public IEmailAddress[] Bcc { get; set; }
+
         public IEmailAddress From { get; set; }
 
         public IEnumerable<IEmailAttachment> Attachments { get; set; }

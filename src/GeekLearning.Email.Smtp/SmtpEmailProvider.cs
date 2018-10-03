@@ -43,7 +43,7 @@
             return SendEmailAsync(from, recipients, subject, text, html, Enumerable.Empty<IEmailAttachment>());
         }
 
-        public async Task SendEmailAsync(
+        public Task SendEmailAsync(
             IEmailAddress from,
             IEnumerable<IEmailAddress> recipients,
             string subject,
@@ -51,11 +51,27 @@
             string html,
             IEnumerable<IEmailAttachment> attachments)
         {
+            return SendEmailAsync(from, recipients, Enumerable.Empty<IEmailAddress>(), Enumerable.Empty<IEmailAddress>(), subject, text, html, Enumerable.Empty<IEmailAttachment>());
+
+        }
+
+        public async Task SendEmailAsync(IEmailAddress from, IEnumerable<IEmailAddress> recipients, IEnumerable<IEmailAddress> ccRecipients, IEnumerable<IEmailAddress> bccRecipients, string subject, string text, string html, IEnumerable<IEmailAttachment> attachments)
+        {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(from.DisplayName, from.Email));
             foreach (var recipient in recipients)
             {
                 message.To.Add(new MailboxAddress(recipient.DisplayName, recipient.Email));
+            }
+
+            foreach (var recipient in ccRecipients)
+            {
+                message.Cc.Add(new MailboxAddress(recipient.DisplayName, recipient.Email));
+            }
+
+            foreach (var recipient in bccRecipients)
+            {
+                message.Bcc.Add(new MailboxAddress(recipient.DisplayName, recipient.Email));
             }
 
             message.Subject = subject;
