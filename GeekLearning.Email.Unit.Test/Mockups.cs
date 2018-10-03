@@ -1,14 +1,13 @@
-using GeekLearning.Email.Internal;
-using GeekLearning.Storage;
-using GeekLearning.Templating;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
-
 namespace GeekLearning.Email.Unit.Test
 {
+    using GeekLearning.Email.Internal;
+    using GeekLearning.Storage;
+    using GeekLearning.Templating;
+    using Moq;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Xunit;
+
     public class Mockups
     {
         [Fact]
@@ -29,7 +28,6 @@ namespace GeekLearning.Email.Unit.Test
                 It.IsAny<string>(),
                 It.IsAny<string>(),
                 Enumerable.Empty<IEmailAttachment>()), Times.Once);
-
         }
 
         [Fact]
@@ -50,7 +48,6 @@ namespace GeekLearning.Email.Unit.Test
                 It.IsAny<string>(),
                 It.IsAny<string>(),
                 Enumerable.Empty<IEmailAttachment>()), Times.Once);
-
         }
     }
 
@@ -64,6 +61,7 @@ namespace GeekLearning.Email.Unit.Test
         {
             EmailProvider = emailProvider;
         }
+
         public IEmailProvider BuildProvider(IEmailProviderOptions providerOptions)
         {
             return EmailProvider;

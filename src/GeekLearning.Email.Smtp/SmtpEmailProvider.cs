@@ -43,7 +43,7 @@
             return SendEmailAsync(from, recipients, subject, text, html, Enumerable.Empty<IEmailAttachment>());
         }
 
-        public  Task SendEmailAsync(
+        public Task SendEmailAsync(
             IEmailAddress from,
             IEnumerable<IEmailAddress> recipients,
             string subject,

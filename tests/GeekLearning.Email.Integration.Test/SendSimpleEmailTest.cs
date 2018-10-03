@@ -54,26 +54,26 @@
                 new SendGrid.SendGridEmailProviderType(),
             };
 
-            var emailSender = new Internal.EmailSender(
+            var emailSender = new EmailSender(
                 providerTypes,
                 options,
                 this.storeFixture.Services.GetRequiredService<IStorageFactory>(),
                 this.storeFixture.Services.GetRequiredService<ITemplateLoaderFactory>());
 
 
-            await emailSender.SendEmailAsync(new Internal.EmailAddress
+            await emailSender.SendEmailAsync(new EmailAddress
             {
                 DisplayName = "Sender user test cc",
                 Email = "no-reply@test.geeklearning.io"
             },
             "Cc test", "Hello, this is an email with cc recipients",
             Enumerable.Empty<IEmailAttachment>(),
-            new Internal.EmailAddress
+            new EmailAddress
             {
                 DisplayName = "recipient user",
                 Email = Datas.FirstRecipient
             }.Yield(),
-            new Internal.EmailAddress
+            new EmailAddress
             {
                 DisplayName = "cc user",
                 Email = Datas.SecondRecipient

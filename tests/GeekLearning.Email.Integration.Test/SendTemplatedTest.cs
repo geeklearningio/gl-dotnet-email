@@ -30,7 +30,7 @@
                 new SendGrid.SendGridEmailProviderType(),
             };
 
-            var emailSender = new Internal.EmailSender(
+            var emailSender = new EmailSender(
                 providerTypes,
                 options,
                 this.storeFixture.Services.GetRequiredService<IStorageFactory>(),
@@ -53,25 +53,24 @@
                 new SendGrid.SendGridEmailProviderType(),
             };
 
-            var emailSender = new Internal.EmailSender(
+            var emailSender = new EmailSender(
                 providerTypes,
                 options,
                 this.storeFixture.Services.GetRequiredService<IStorageFactory>(),
                 this.storeFixture.Services.GetRequiredService<ITemplateLoaderFactory>());
 
-
-            await emailSender.SendTemplatedEmailAsync(new Internal.EmailAddress
+            await emailSender.SendTemplatedEmailAsync(new EmailAddress
             {
                 DisplayName = "Sender user test cc",
                 Email = "no-reply@test.geeklearning.io"
             }, "Notification1", new { },
             Enumerable.Empty<IEmailAttachment>(),
-            new Internal.EmailAddress
+            new EmailAddress
             {
                 DisplayName = "recipient user",
                 Email = Datas.FirstRecipient
             }.Yield(),
-            new Internal.EmailAddress
+            new EmailAddress
             {
                 DisplayName = "cc user",
                 Email = Datas.SecondRecipient
@@ -89,26 +88,25 @@
                 new SendGrid.SendGridEmailProviderType(),
             };
 
-            var emailSender = new Internal.EmailSender(
+            var emailSender = new EmailSender(
                 providerTypes,
                 options,
                 this.storeFixture.Services.GetRequiredService<IStorageFactory>(),
                 this.storeFixture.Services.GetRequiredService<ITemplateLoaderFactory>());
 
-
-            await emailSender.SendTemplatedEmailAsync(new Internal.EmailAddress
+            await emailSender.SendTemplatedEmailAsync(new EmailAddress
             {
                 DisplayName = "Sender user test cc",
                 Email = "no-reply@test.geeklearning.io"
             }, "Notification1", new { },
             Enumerable.Empty<IEmailAttachment>(),
-            new Internal.EmailAddress
+            new EmailAddress
             {
                 DisplayName = "recipient user",
                 Email = Datas.FirstRecipient
             }.Yield(),
             new IEmailAddress[0],
-            new Internal.EmailAddress
+            new EmailAddress
             {
                 DisplayName = "test user",
                 Email = Datas.SecondRecipient
@@ -125,7 +123,7 @@
                 new SendGrid.SendGridEmailProviderType(),
             };
 
-            var emailSender = new Internal.EmailSender(
+            var emailSender = new EmailSender(
                 providerTypes,
                 options,
                 this.storeFixture.Services.GetRequiredService<IStorageFactory>(),
@@ -137,11 +135,15 @@
             data = System.IO.File.ReadAllBytes(@"Files\sample.pdf");
             var pdf = new EmailAttachment("Sample.pdf", data, "application", "pdf");
 
-            await emailSender.SendTemplatedEmailAsync(new Internal.EmailAddress
+            await emailSender.SendTemplatedEmailAsync(new EmailAddress
             {
                 DisplayName = "test user attachm ments",
                 Email = "no-reply@test.geeklearning.io"
-            }, "Notification1", new { }, new List<IEmailAttachment> { image, pdf }, new Internal.EmailAddress
+            },
+            "Notification1",
+            new { },
+            new List<IEmailAttachment> { image, pdf },
+            new EmailAddress
             {
                 DisplayName = "test user",
                 Email = Datas.FirstRecipient

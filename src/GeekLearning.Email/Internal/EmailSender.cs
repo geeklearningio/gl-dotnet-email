@@ -91,7 +91,7 @@
             var subjectTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.Subject);
             var textTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.BodyText);
             var htmlTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.BodyHtml);
-          
+
             await this.DoMockupAndSendEmailAsync(
                 from,
                 to,
@@ -133,6 +133,7 @@
                                 finalRecipients.Add(new EmailAddress(mockupRecipient, "Mockup Recipient"));
                             }
                         }
+
                         if (!alreadyMockedUpRecipients.Any(a => a.DisplayName == recipient.DisplayName && a.Email == recipient.Email))
                         {
                             alreadyMockedUpRecipients.Add(recipient);
@@ -148,6 +149,7 @@
             {
                 finalRecipients = recipients.ToList();
             }
+
             return finalRecipients;
         }
 
@@ -179,7 +181,7 @@
             await this.provider.SendEmailAsync(
                 from,
                 finalToRecipients,
-                finalCcRecipients, 
+                finalCcRecipients,
                 finalBccRecipients,
                 subject,
                 text,

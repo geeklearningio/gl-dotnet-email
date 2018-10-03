@@ -2,6 +2,7 @@
 {
     using Microsoft.Extensions.Options;
     using System.Collections.Generic;
+
     public class Datas
     {
         public const string FirstRecipient = "no-reply@test.geeklearning.io";
@@ -10,7 +11,7 @@
 
         public static IOptions<EmailOptions> GetOptions(StoresFixture storeFixture, string storeName = null)
         {
-            return Microsoft.Extensions.Options.Options.Create(new EmailOptions
+            return Options.Create(new EmailOptions
             {
                 Provider = new EmailProviderOptions
                 {

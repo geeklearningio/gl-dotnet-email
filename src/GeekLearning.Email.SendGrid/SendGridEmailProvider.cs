@@ -31,7 +31,7 @@
             return SendEmailAsync(from, recipients, subject, text, html, Enumerable.Empty<IEmailAttachment>());
         }
 
-        public  Task SendEmailAsync(IEmailAddress from,
+        public Task SendEmailAsync(IEmailAddress from,
             IEnumerable<IEmailAddress> recipients,
             string subject,
             string text,
@@ -47,7 +47,7 @@
             allRecipients.AddRange(ccRecipients);
             allRecipients.AddRange(bccRecipients);
 
-            if(allRecipients.GroupBy(r => r.Email).Count() < allRecipients.Count)
+            if (allRecipients.GroupBy(r => r.Email).Count() < allRecipients.Count)
             {
                 throw new ArgumentException("Each email address should be unique between to, cc, and bcc recipients. We found duplicates.");
             }

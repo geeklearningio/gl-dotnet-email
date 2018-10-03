@@ -31,7 +31,7 @@
                 MessageText = text,
                 MessageHtml = html,
                 To = recipients.ToArray(),
-                Cc  = ccRecipients.ToArray(), 
+                Cc = ccRecipients.ToArray(),
                 Bcc = bccRecipients.ToArray(),
                 From = from,
                 Attachments = attachments
