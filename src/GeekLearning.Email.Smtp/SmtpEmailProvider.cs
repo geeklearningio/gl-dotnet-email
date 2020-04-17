@@ -55,10 +55,16 @@
 
         }
 
-        public async Task SendEmailAsync(IEmailAddress from, IEnumerable<IEmailAddress> recipients, IEnumerable<IEmailAddress> ccRecipients, IEnumerable<IEmailAddress> bccRecipients, string subject, string text, string html, IEnumerable<IEmailAttachment> attachments)
+        public async Task SendEmailAsync(IEmailAddress from, IEnumerable<IEmailAddress> recipients, IEnumerable<IEmailAddress> ccRecipients, IEnumerable<IEmailAddress> bccRecipients, string subject, string text, string html, IEnumerable<IEmailAttachment> attachments, IEmailAddress replyTo = null)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(from.DisplayName, from.Email));
+
+            if(replyTo != null)
+            {
+                message.ReplyTo.Add(new MailboxAddress(replyTo.DisplayName, replyTo.Email));
+            }
+            
             foreach (var recipient in recipients)
             {
                 message.To.Add(new MailboxAddress(recipient.DisplayName, recipient.Email));

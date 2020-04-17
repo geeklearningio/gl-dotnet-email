@@ -27,7 +27,8 @@ namespace GeekLearning.Email.Unit.Test
                 It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<string>(),
-                Enumerable.Empty<IEmailAttachment>()), Times.Once);
+                Enumerable.Empty<IEmailAttachment>(),
+                null), Times.Once);
         }
 
         [Fact]
@@ -47,7 +48,8 @@ namespace GeekLearning.Email.Unit.Test
                 It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<string>(),
-                Enumerable.Empty<IEmailAttachment>()), Times.Once);
+                Enumerable.Empty<IEmailAttachment>(),
+                null), Times.Once);
         }
     }
 

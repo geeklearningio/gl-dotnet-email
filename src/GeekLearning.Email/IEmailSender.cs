@@ -9,16 +9,24 @@
 
         Task SendEmailAsync(IEmailAddress from, string subject, string message, params IEmailAddress[] to);
 
+        Task SendEmailAsync(IEmailAddress from, IEmailAddress replyTo, string subject, string message, params IEmailAddress[] to);
+
         Task SendEmailAsync(IEmailAddress from, string subject, string message, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to);
 
-        Task SendEmailAsync(IEmailAddress from, string subject, string message, IEnumerable<IEmailAttachment> attachments, IEmailAddress[] to, IEmailAddress[] cc, IEmailAddress[] bcc);
+        Task SendEmailAsync(IEmailAddress from, IEmailAddress replyTo, string subject, string message, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to);
+
+        Task SendEmailAsync(IEmailAddress from, string subject, string message, IEnumerable<IEmailAttachment> attachments, IEmailAddress[] to, IEmailAddress[] cc, IEmailAddress[] bcc, IEmailAddress replyTo = null);
 
         Task SendTemplatedEmailAsync<T>(string templateKey, T context, params IEmailAddress[] to);
 
         Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, params IEmailAddress[] to);
 
+        Task SendTemplatedEmailAsync<T>(IEmailAddress from, IEmailAddress replyTo, string templateKey, T context, params IEmailAddress[] to);
+
         Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to);
 
-        Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, IEnumerable<IEmailAttachment> attachments, IEmailAddress[] to, IEmailAddress[] cc, IEmailAddress[] bcc);
+        Task SendTemplatedEmailAsync<T>(IEmailAddress from, IEmailAddress replyTo, string templateKey, T context, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to);
+
+        Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, IEnumerable<IEmailAttachment> attachments, IEmailAddress[] to, IEmailAddress[] cc, IEmailAddress[] bcc, IEmailAddress replyTo = null);
     }
 }

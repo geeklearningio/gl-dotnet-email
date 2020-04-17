@@ -41,7 +41,7 @@
             return SendEmailAsync(from, recipients, Enumerable.Empty<IEmailAddress>(), Enumerable.Empty<IEmailAddress>(), subject, text, html, Enumerable.Empty<IEmailAttachment>());
         }
 
-        public async Task SendEmailAsync(IEmailAddress from, IEnumerable<IEmailAddress> recipients, IEnumerable<IEmailAddress> ccRecipients, IEnumerable<IEmailAddress> bccRecipients, string subject, string text, string html, IEnumerable<IEmailAttachment> attachments)
+        public async Task SendEmailAsync(IEmailAddress from, IEnumerable<IEmailAddress> recipients, IEnumerable<IEmailAddress> ccRecipients, IEnumerable<IEmailAddress> bccRecipients, string subject, string text, string html, IEnumerable<IEmailAttachment> attachments, IEmailAddress replyTo = null)
         {
             var allRecipients = new List<IEmailAddress>(recipients);
             allRecipients.AddRange(ccRecipients);
@@ -88,6 +88,11 @@
                     Type = a.ContentType,
                     Content = Convert.ToBase64String(a.Data)
                 }).ToList());
+            }
+
+            if(replyTo != null)
+            {
+                message.ReplyTo = replyTo.ToSendGridEmail();
             }
 
             var response = await client.SendEmailAsync(message);

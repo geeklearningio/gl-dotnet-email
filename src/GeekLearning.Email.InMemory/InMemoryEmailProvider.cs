@@ -23,7 +23,7 @@
             return SendEmailAsync(from, recipients, Enumerable.Empty<IEmailAddress>(), Enumerable.Empty<IEmailAddress>(), subject, text, html, Enumerable.Empty<IEmailAttachment>());
         }
 
-        public Task SendEmailAsync(IEmailAddress from, IEnumerable<IEmailAddress> recipients, IEnumerable<IEmailAddress> ccRecipients, IEnumerable<IEmailAddress> bccRecipients, string subject, string text, string html, IEnumerable<IEmailAttachment> attachments)
+        public Task SendEmailAsync(IEmailAddress from, IEnumerable<IEmailAddress> recipients, IEnumerable<IEmailAddress> ccRecipients, IEnumerable<IEmailAddress> bccRecipients, string subject, string text, string html, IEnumerable<IEmailAttachment> attachments, IEmailAddress replyTo = null)
         {
             this.inMemoryEmailRepository.Save(new InMemoryEmail
             {
@@ -34,6 +34,7 @@
                 Cc = ccRecipients.ToArray(),
                 Bcc = bccRecipients.ToArray(),
                 From = from,
+                ReplyTo = replyTo,
                 Attachments = attachments
             });
 

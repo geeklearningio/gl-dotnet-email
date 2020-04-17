@@ -18,6 +18,8 @@ namespace GeekLearning.Email.InMemory
 
         public IEmailAddress From { get; set; }
 
+        public IEmailAddress ReplyTo { get; set; }
+
         public IEnumerable<IEmailAttachment> Attachments { get; set; }
     }
 }

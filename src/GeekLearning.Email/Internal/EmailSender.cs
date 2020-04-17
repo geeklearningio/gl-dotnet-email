@@ -50,7 +50,12 @@
 
         public Task SendEmailAsync(IEmailAddress from, string subject, string message, params IEmailAddress[] to)
         {
-            return this.SendEmailAsync(options.DefaultSender, subject, message, Enumerable.Empty<IEmailAttachment>(), to);
+            return this.SendEmailAsync(from, subject, message, Enumerable.Empty<IEmailAttachment>(), to);
+        }
+
+        public Task SendEmailAsync(IEmailAddress from, IEmailAddress replyTo, string subject, string message, params IEmailAddress[] to)
+        {
+            return this.SendEmailAsync(from, replyTo, subject, message, Enumerable.Empty<IEmailAttachment>(), to);
         }
 
         public Task SendEmailAsync(IEmailAddress from, string subject, string message, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to)
@@ -58,10 +63,16 @@
             return this.SendEmailAsync(from, subject, message, attachments, to.ToArray(), new IEmailAddress[0], new IEmailAddress[0]);
         }
 
-        public Task SendEmailAsync(IEmailAddress from, string subject, string message, IEnumerable<IEmailAttachment> attachments, IEmailAddress[] to, IEmailAddress[] cc, IEmailAddress[] bcc)
+        public Task SendEmailAsync(IEmailAddress from, IEmailAddress replyTo, string subject, string message, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to)
+        {
+            return this.SendEmailAsync(from, subject, message, attachments, to.ToArray(), new IEmailAddress[0], new IEmailAddress[0], replyTo: replyTo);
+        }
+
+        public Task SendEmailAsync(IEmailAddress from, string subject, string message, IEnumerable<IEmailAttachment> attachments, IEmailAddress[] to, IEmailAddress[] cc, IEmailAddress[] bcc, IEmailAddress replyTo = null)
         {
             return DoMockupAndSendEmailAsync(
               from,
+              replyTo,
               to,
               cc,
               bcc,
@@ -81,12 +92,22 @@
             return this.SendTemplatedEmailAsync(from, templateKey, context, Enumerable.Empty<IEmailAttachment>(), to);
         }
 
+        public Task SendTemplatedEmailAsync<T>(IEmailAddress from, IEmailAddress replyTo, string templateKey, T context, params IEmailAddress[] to)
+        {
+            return this.SendTemplatedEmailAsync(from, replyTo, templateKey, context, Enumerable.Empty<IEmailAttachment>(), to);
+        }
+
         public Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to)
         {
             return this.SendTemplatedEmailAsync(from, templateKey, context, attachments, to, new IEmailAddress[0], new IEmailAddress[0]);
         }
 
-        public async Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, IEnumerable<IEmailAttachment> attachments, IEmailAddress[] to, IEmailAddress[] cc, IEmailAddress[] bcc)
+        public Task SendTemplatedEmailAsync<T>(IEmailAddress from, IEmailAddress replyTo, string templateKey, T context, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to)
+        {
+            return this.SendTemplatedEmailAsync(from, templateKey, context, attachments, to, new IEmailAddress[0], new IEmailAddress[0], replyTo: replyTo);
+        }
+
+        public async Task SendTemplatedEmailAsync<T>(IEmailAddress from, string templateKey, T context, IEnumerable<IEmailAttachment> attachments, IEmailAddress[] to, IEmailAddress[] cc, IEmailAddress[] bcc, IEmailAddress replyTo = null)
         {
             var subjectTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.Subject);
             var textTemplate = await this.GetTemplateAsync(templateKey, EmailTemplateType.BodyText);
@@ -94,6 +115,7 @@
 
             await this.DoMockupAndSendEmailAsync(
                 from,
+                replyTo,
                 to,
                 cc,
                 bcc,
@@ -155,6 +177,7 @@
 
         private async Task DoMockupAndSendEmailAsync(
             IEmailAddress from,
+            IEmailAddress replyTo,
             IEnumerable<IEmailAddress> recipients,
             IEnumerable<IEmailAddress> ccRecipients,
             IEnumerable<IEmailAddress> bccRecipients,
@@ -186,7 +209,8 @@
                 subject,
                 text,
                 html,
-                attachments);
+                attachments,
+                replyTo: replyTo);
         }
     }
 }
