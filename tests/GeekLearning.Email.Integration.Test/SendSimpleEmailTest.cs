@@ -61,22 +61,22 @@
                 this.storeFixture.Services.GetRequiredService<ITemplateLoaderFactory>());
 
             await emailSender.SendEmailAsync(
-            new EmailAddress
-            {
-                DisplayName = "Sender user test replyTo",
-                Email = "no-reply@test.geeklearning.io"
-            },
-            new EmailAddress
-            {
-                DisplayName = "Reply Address",
-                Email = "no-reply2@test.geeklearning.io"
-            },
+                new EmailAddress
+                {
+                    DisplayName = "Sender user test replyTo",
+                    Email = "no-reply@test.geeklearning.io"
+                },
+                new EmailAddress
+                {
+                    DisplayName = "Reply Address",
+                    Email = "no-reply2@test.geeklearning.io"
+                },
                 "Simple mail", "Hello, it's a simple mail", 
-            new Internal.EmailAddress
-            {
-                DisplayName = "test user",
-                Email = "test@test.geeklearning.io"
-            });
+                new Internal.EmailAddress
+                {
+                    DisplayName = "test user",
+                    Email = "test@test.geeklearning.io"
+                });
         }
 
         [Fact(DisplayName = nameof(SendWithCC))]

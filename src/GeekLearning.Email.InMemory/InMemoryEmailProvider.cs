@@ -34,7 +34,7 @@
                 Cc = ccRecipients.ToArray(),
                 Bcc = bccRecipients.ToArray(),
                 From = from,
-                replyTo = replyTo,
+                ReplyTo = replyTo,
                 Attachments = attachments
             });
 
