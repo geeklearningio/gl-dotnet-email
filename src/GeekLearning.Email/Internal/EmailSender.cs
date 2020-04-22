@@ -53,9 +53,9 @@
             return this.SendEmailAsync(from, subject, message, Enumerable.Empty<IEmailAttachment>(), to);
         }
 
-        public Task SendEmailAsync(IEmailAddress from, IEmailAddress replyTo, string subject, string message, params IEmailAddress[] to)
+        public Task SendEmailAsync(IEmailAddress from, IEmailAddress replyTo, string subject, string message, bool plainTextOnly, params IEmailAddress[] to)
         {
-            return this.SendEmailAsync(from, replyTo, subject, message, Enumerable.Empty<IEmailAttachment>(), to);
+            return this.SendEmailAsync(from, replyTo, subject, message, plainTextOnly, Enumerable.Empty<IEmailAttachment>(), to);
         }
 
         public Task SendEmailAsync(IEmailAddress from, string subject, string message, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to)
@@ -63,13 +63,27 @@
             return this.SendEmailAsync(from, subject, message, attachments, to.ToArray(), new IEmailAddress[0], new IEmailAddress[0]);
         }
 
-        public Task SendEmailAsync(IEmailAddress from, IEmailAddress replyTo, string subject, string message, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to)
+        public Task SendEmailAsync(IEmailAddress from, IEmailAddress replyTo, string subject, string message, bool plainTextOnly, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to)
         {
-            return this.SendEmailAsync(from, subject, message, attachments, to.ToArray(), new IEmailAddress[0], new IEmailAddress[0], replyTo: replyTo);
+            return this.SendEmailAsync(from, subject, message, attachments, to.ToArray(), new IEmailAddress[0], new IEmailAddress[0], replyTo: replyTo, plainTextOnly: plainTextOnly);
         }
 
-        public Task SendEmailAsync(IEmailAddress from, string subject, string message, IEnumerable<IEmailAttachment> attachments, IEmailAddress[] to, IEmailAddress[] cc, IEmailAddress[] bcc, IEmailAddress replyTo = null)
+        public Task SendEmailAsync(IEmailAddress from, string subject, string message, IEnumerable<IEmailAttachment> attachments, IEmailAddress[] to, IEmailAddress[] cc, IEmailAddress[] bcc, IEmailAddress replyTo = null, bool plainTextOnly = false)
         {
+            if (plainTextOnly)
+            {
+                return DoMockupAndSendEmailAsync(
+                 from,
+                 replyTo,
+                 to,
+                 cc,
+                 bcc,
+                 subject,
+                 message,
+                 null,
+                 attachments);
+            }
+
             return DoMockupAndSendEmailAsync(
               from,
               replyTo,
@@ -198,7 +212,10 @@
                 var joinedMockedUpRecipients = string.Join(", ", mockedUpRecipients.Select(r => $"{r.DisplayName} ({r.Email})"));
 
                 text = string.Concat(text, Environment.NewLine, disclaimer, Environment.NewLine, joinedMockedUpRecipients);
-                html = string.Concat(html, "<br/><i>", disclaimer, "<br/>", joinedMockedUpRecipients, "</i>");
+                if (html != null)
+                {
+                    html = string.Concat(html, "<br/><i>", disclaimer, "<br/>", joinedMockedUpRecipients, "</i>");
+                }
             }
 
             await this.provider.SendEmailAsync(
