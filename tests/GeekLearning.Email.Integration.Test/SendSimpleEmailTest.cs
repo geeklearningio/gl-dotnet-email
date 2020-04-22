@@ -71,7 +71,7 @@
                     DisplayName = "Reply Address",
                     Email = "no-reply2@test.geeklearning.io"
                 },
-                "Simple mail", "Hello, it's a simple mail", 
+                "Simple mail", "Hello, it's a simple mail", false,
                 new Internal.EmailAddress
                 {
                     DisplayName = "test user",

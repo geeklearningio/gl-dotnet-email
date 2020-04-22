@@ -9,13 +9,13 @@
 
         Task SendEmailAsync(IEmailAddress from, string subject, string message, params IEmailAddress[] to);
 
-        Task SendEmailAsync(IEmailAddress from, IEmailAddress replyTo, string subject, string message, params IEmailAddress[] to);
+        Task SendEmailAsync(IEmailAddress from, IEmailAddress replyTo, string subject, string message, bool plainTextOnly, params IEmailAddress[] to);
 
         Task SendEmailAsync(IEmailAddress from, string subject, string message, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to);
 
-        Task SendEmailAsync(IEmailAddress from, IEmailAddress replyTo, string subject, string message, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to);
+        Task SendEmailAsync(IEmailAddress from, IEmailAddress replyTo, string subject, string message, bool plainTextOnly, IEnumerable<IEmailAttachment> attachments, params IEmailAddress[] to);
 
-        Task SendEmailAsync(IEmailAddress from, string subject, string message, IEnumerable<IEmailAttachment> attachments, IEmailAddress[] to, IEmailAddress[] cc, IEmailAddress[] bcc, IEmailAddress replyTo = null);
+        Task SendEmailAsync(IEmailAddress from, string subject, string message, IEnumerable<IEmailAttachment> attachments, IEmailAddress[] to, IEmailAddress[] cc, IEmailAddress[] bcc, IEmailAddress replyTo = null, bool plainTextOnly = false);
 
         Task SendTemplatedEmailAsync<T>(string templateKey, T context, params IEmailAddress[] to);
 
