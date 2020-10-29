@@ -31,9 +31,9 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.0.0" />
-    <PackageReference Include="GeekLearning.Templating.Handlebars" Version="0.6.0-alpha0009" />
-    <PackageReference Include="GeekLearning.Storage.Azure" Version="0.8.0-alpha0003" />
-    <PackageReference Include="GeekLearning.Storage.FileSystem" Version="0.8.0-alpha0003" />
+    <PackageReference Include="GeekLearning.Templating.Handlebars" Version="0.7.0" />
+    <PackageReference Include="GeekLearning.Storage.Azure" Version="0.8.1" />
+    <PackageReference Include="GeekLearning.Storage.FileSystem" Version="0.8.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,6 +41,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="appsettings.development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Files\beach.jpeg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
