@@ -4,18 +4,17 @@
     <Description>SendGrid Provider for Geek Learning Email Abstractions.</Description>
     <VersionPrefix>0.0.1</VersionPrefix>
     <Authors>Geek Learning;Adrien Siffermann;Cyprien Autexier</Authors>
-    <TargetFramework>netstandard1.1</TargetFramework>
+    <TargetFramework>netstandard2</TargetFramework>
     <AssemblyName>GeekLearning.Email.SendGrid</AssemblyName>
     <PackageId>GeekLearning.Email.SendGrid</PackageId>
-    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GeekLearning.Email\GeekLearning.Email.csproj" />
+    <PackageReference Include="Sendgrid" Version="9.9.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <ProjectReference Include="..\GeekLearning.Email\GeekLearning.Email.csproj" />
   </ItemGroup>
 
 </Project>
